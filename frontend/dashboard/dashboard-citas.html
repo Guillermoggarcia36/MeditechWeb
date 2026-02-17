@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/dashboard-global.css">
+    <link rel="icon" href="../assets/icons/iconoMeditech.ico" type="image/x-icon">
+</head>
+
+<!-- Loader -->
+<div id="loader-container" class="loader-active">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+</div>
+
+<header>
+    <main class="main-container">
+        <div class="logo-dashboard">
+            <img src="../assets/logos/logoMeditech.svg">
+        </div>
+        <div class="date-time">
+            <p id="time"></p>
+            <p id="date"></p>
+        </div>
+        <div class="user">
+            <button id="btn-user">
+                <p id="name-user"></p>
+                <img src="../assets/icons/lista.png">
+            </button>
+            <div id="user-options">
+                <button id="logOut">
+                    <p>Cerrar sesion</p>
+                    <img src="../assets/icons/cerrarSesion.png">
+                </button>
+            </div>
+        </div>
+        <div id="sidebar-container">
+            <button id="inicio-btn">
+                <p>Inicio</p>
+                <img src="../assets/icons/casa.png">
+            </button>
+            <button id="usuarios-btn">
+                <p>Usuarios</p>
+                <img src="../assets/icons/usuario3.png">
+            </button>
+            <button id="citas-btn">
+                <p>Citas medicas</p>
+                <img src="../assets/icons/cita-medica.png">
+            </button>
+            <button id="historial-btn">
+                <p>Historial medico</p>
+                <img src="../assets/icons/historialMedico.png">
+            </button>
+        </div>
+
+        <section id="content-area">
+            <div id="title-content">
+                <h1>Citas Medicas</h1>
+            </div>
+                <div id="citas-container">
+                    <div class="content-container">
+                        <div id="select-menu">
+                            <button id="new-cita">
+                                <img src="../assets/icons/mas.png">
+                                <p>Agendar nueva cita</p>
+                            </button>
+                            <button id="consult-cita">
+                                <img src="../assets/icons/lupa.png"
+                                <p>Consultar cita</p>
+                            </button>                            
+                        </div>
+                    </div>
+           <section id="schedule-cita">
+                <div id="subtitle-content">
+                    <h2>Agendar cita</h2>
+                </div>
+                <div id="select-content">
+                    <input type="text" id="searchInput-cita" placeholder="Buscar sede por nombre">
+                    <h2 id="steps-notes"></h2>
+                        <div id="options-sedes">
+                            
+                        </div>
+                        <div id="options-medicos">
+    
+                        </div>
+                        <div id="options-calendario" class="contenedor-fecha-hora">
+                            <label for="fecha-cita">Fecha</label>
+                            <input type="date" id="fecha-cita">
+                            <label for="hora-cita">Hora</label>
+                            <!--input type="time" id="hora-cita" 
+                                min="08:00"
+                                max="18:00"
+                                step="1800">
+                            <p id="error-msg">Horario no disponible</p>-->
+                            <select id="hora-cita">
+                                <option value="" disabled selected>Selecciona una hora</option>
+                                <option value="08:00">08:00 AM</option>
+                                <option value="08:30">08:30 AM</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="09:30">09:30 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="10:30">10:30 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="11:30">11:30 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="12:30">12:30 PM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="13:30">01:30 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="14:30">02:30 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="15:30">03:30 PM</option>
+                                <option value="16:00">04:00 PM</option>
+                                <option value="16:30">04:30 PM</option>
+                                <option value="17:00">05:00 PM</option>
+                                <option value="17:30">05:30 PM</option>
+                            </select>
+                        </div>
+                        <div id="resumen-cita">
+
+                        </div>
+                    <div id="buttons-schedule">
+                        <button id="cancel-btn">
+                            <p>Cancelar</p>
+                        </button>
+                        <button id="next-btn">
+                            <p id="next-btnText">Siguiente</p>                            
+                            <img src="../assets/icons/siguiente.png">
+                        </button>
+                    </div>
+                </div>
+            </section> 
+            <section id="consult-menu">
+                <div id="subtitle-content">
+                    <h2>Consultar cita</h2>
+                    <div id="back-btn">
+                        <img src="../assets/icons/atras.png" width="16px">
+                        <p>Volver al menu</p>
+                    </div>
+                </div>  
+                <div id="search-section">
+                    <input type="text" id="searchInput-consult" placeholder="Buscar cita por codigo, medico, fecha u hora"> 
+                </div>
+                    <table id="tables-citas">
+                            <thead>
+                                <tr id="tables-columns-citas">
+                                    <th><p>Codigo<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th><p>Sede<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th><p>Medico<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th><p>Usuario<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th><p>Fecha<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th><p>Hora<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th><p>Estado<img src="../assets/icons/flechas-arriba-y-abajo.png"></p></th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                                <tbody id="datos-citas">
+                                </tbody>
+                    </table>
+                    <div id="pagination-controls"></div>
+            </section>                   
+                </div>
+        </section>
+    </main>
+</header>
+
+<script src="scripts/protectRoute.js"></script>
+<script src="scripts/global.js"></script>
+<script src="scripts/sessionManager.js"></script>
+<script src="scripts/citas.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

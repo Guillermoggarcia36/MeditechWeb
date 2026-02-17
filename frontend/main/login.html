@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingreso usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/login.css">
+</head>
+
+<header>
+    <div id="back">
+        <button id="btn-back">
+            <img src="../assets/icons/flecha.png">
+        </button>
+    </div>
+</header>
+
+
+<body>
+    <!-- Pantalla de carga -->
+    <div id="loader-container" class="loader-active">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+    </div>
+    
+    <div id="login-container">
+        <div id="user">
+            <img src="../assets/icons/usuario.png">
+        </div>
+        <div id="fields">
+            <div id="field-user">
+                <input type="text" id="id-usuario" placeholder="Id usuario" maxlength="13">
+                    <p id="error-id">Id no valido o incompleto</p>
+            </div>
+            <div id="field-password">
+                <input type="password" id="contraseña" placeholder="Contraseña" maxlength="13">
+                    <p id="error-password">contraseña no valida o incompleta</p>
+                    <div id="show-password"></div>
+            </div>
+        </div>
+        <div id="login">
+            <button id="btn-login">Entrar</button>
+        </div>
+    </div>
+
+</body>    
+    <script src="scripts/global.js"></script>
+    <script src="scripts/login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

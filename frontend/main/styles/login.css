@@ -1,0 +1,282 @@
+html {
+    overflow-x: hidden;
+}
+
+/* ==================== LOADER / PANTALLA DE CARGA ==================== */
+#loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #498EC9 0%, #2d5a8c 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+#loader-container.loader-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+#loader-container.loader-inactive {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader-content p {
+    color: white;
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    letter-spacing: 2px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ==================== FIN LOADER ==================== */
+
+body {
+    background-image: url("../../assets/backgrounds/backgroundHospital.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#back {
+    display: flex;
+}
+
+#btn-back img {
+    width: 64px;
+    animation: fadeOut 1.25s ease-in-out;    
+}
+
+#btn-back {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    border-radius: 1.5%;
+    margin-left: 2%;
+    margin-top: 2%;
+    margin-bottom: 1%;
+}
+
+#login-container {
+    display: grid;
+    grid-template-areas: 
+        "user"
+        "field1"
+        "field2"
+        "login";
+    background-color: #87B7E1;
+    padding-bottom: 2%;
+    margin-left: 37%;
+    margin-right: 37%;
+    border-radius: 15px 15px 15px 15px;
+    justify-content: center;
+    box-shadow: #87b7e14b 10px 10px 0px 1px;
+    justify-items: center;
+    animation: fadeIn 0.60s ease-in;
+}
+
+#user {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+    grid-area: user;
+}
+
+#user img {
+    width: 30%;
+    box-shadow: #3d76a72a 0px 3px 0px 1px;
+    border-radius: 100%;
+}
+
+#fields {
+    margin-top: 5%;
+    gap: 60%;
+    border: none;
+    justify-items: center;
+}
+
+#fields input {
+    padding: 2%;
+    font-family: 'Segoe UI',sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: center;
+    padding-bottom: 10%;
+    border: none;
+    box-shadow: 0 1px 0 0 white;
+    outline: none;
+    padding-top: 7%;
+}
+
+#error-id {
+    font-family: 'Roboto',sans-serif;
+    font-size: 0.8rem;
+    color: red;
+    visibility: hidden;
+}
+
+#error-password {
+    font-family: 'Roboto',sans-serif;
+    font-size: 0.8rem;
+    color: red;
+    grid-area: errorPassword;
+    visibility: hidden;
+}
+
+#fields input::placeholder {
+    color: rgba(255, 255, 255, 0.644);
+    font-weight: 300;
+}
+
+#field-user {
+    text-align: center;
+}
+
+#id-usuario {
+    padding: 3%;
+    background-color: rgba(240, 248, 255, 0);
+    background-image: url("../../assets/icons/usuario2.png");
+    background-size: 15%;
+    background-repeat: no-repeat;
+    color: white;
+    grid-area: field1;
+}
+
+#fields input[type=number]::-webkit-outer-spin-button,
+#fields input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+    margin: 0;
+}
+
+#field-password {
+    grid-area: field2;
+    display: grid;
+    grid-template-areas: 
+        "password showPassword"
+        "errorPassword errorPassword";
+    justify-items: end;
+    margin-left: 15%;
+}
+
+#contraseña {
+    padding: 3%;
+    background-color: rgba(240, 248, 255, 0);
+    background-image: url("../../assets/icons/candado.png");
+    background-size: 13%;
+    background-repeat: no-repeat;
+    color: white;
+    grid-area: password;
+}
+
+#show-password {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    grid-area: showPassword;
+    background-image: url("../../assets/icons/show.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-top: 35%;
+}
+
+#login {
+    margin-top: 5%;
+    margin-right: 10%;
+    grid-area: login;
+}
+
+#btn-login {
+    font-family: 'Segoe UI',sans-serif;
+    color: rgba(0, 0, 0, 0.658);
+    border: none;
+    font-size: 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 15%;
+    padding-right: 40%;
+    box-shadow: inset 0px -5px 0px rgb(128, 128, 128);
+    background-image: url("../../assets/icons/login.png");
+    background-size: 16%;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    width: auto;
+}
+
+#btn-login:hover {
+    background-color: #dadada; 
+    color: black;
+    transform: scale(1.01);
+}
+
+.swal2-popup {
+    font-family: 'Roboto', sans-serif;
+}
+
+@media (min-width:375px) and (max-width:667px) {
+    #login-container {
+        margin-left: 0%;
+        margin-right: 0%;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 0.5;
+        transform: translateY(0px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/dashboard-global.css">
+    <link rel="icon" href="../assets/icons/iconoMeditech.ico" type="image/x-icon">
+</head>
+
+<!-- Loader -->
+<div id="loader-container" class="loader-active">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+</div>
+
+<header>
+    <main class="main-container">
+        <div class="logo-dashboard">
+            <img src="../assets/logos/logoMeditech.svg">
+        </div>
+        <div class="date-time">
+            <p id="time"></p>
+            <p id="date"></p>
+        </div>
+        <div class="user">
+            <button id="btn-user">
+                <p id="name-user"></p>
+                <img src="../assets/icons/lista.png">
+            </button>
+            <div id="user-options">
+                    <button id="logOut">                        
+                            <p>Cerrar sesion</p>
+                            <img src="../assets/icons/cerrarSesion.png">
+                    </button>                               
+            </div>
+        </div>
+        <div id="sidebar-container">
+            <button id="inicio-btn">
+                <p>Inicio</p>
+                <img src="../assets/icons/casa.png">
+            </button>
+            <button id="usuarios-btn">
+                <p>Usuarios</p>
+                <img src="../assets/icons/usuario3.png">
+            </button>
+            <button id="citas-btn">
+                <p>Citas medicas</p>
+                <img src="../assets/icons/cita-medica.png">
+            </button>
+            <button id="historial-btn">
+                <p>Historial medico</p>
+                <img src="../assets/icons/historialMedico.png">
+            </button>
+        </div>
+
+        <section id="content-area">
+
+            <div id="title-content">
+                <h1>Historial medico</h1>
+                <div id="back-container">
+                    <button id="backBtn">
+                        <img src="../assets/slider/leftArrow.png" width="16px">
+                        <p>Volver</p>
+                    </button>
+                </div>
+            </div>
+
+            <section id="resumen-historial">
+                <div id="generalInfo-container">
+
+                </div>
+
+                <div id="consultas-container">
+                    <h2>Consultas medicas</h2>
+                    <div id="consultasInformation-container">
+
+                    </div>
+                </div>
+                <div id="procedimientos-container">
+                    <h2>Procedimientos quirurgicos</h2>
+                    <div id="procedimientosInformation-container">
+
+                    </div>
+                </div>
+
+                <div id="acciones-container">
+                    <h2>Acciones</h2>
+                    <button id="consultaBtn">
+                        <img src="../assets/icons/mas.png"" alt="Agregar nueva consulta">
+                        <p>Agregar consulta</p>
+                    </button>
+                    <button id="recetaBtn">
+                        <img src="../assets/icons/mas.png"" alt="Agregar nueva receta">
+                        <p>Agregar receta</p>
+                    </button>
+                </div>
+            </section>    
+
+                <div id="historial-container">
+                    <div class="content-container">
+                        <div id="search-historial">
+                            <input type="text" id="searchInput-historial" name="busqueda" placeholder="Buscar registro por ID, medico, fecha...">
+                        </div>
+                        <div id="nuevo-registro">
+                            <button id="nuevo-registroBtn">
+                                <img src="../assets/icons/mas.png" alt="Agregar nuevo registro">
+                                <p>Nuevo registro</p>
+                            </button>
+                        </div>
+
+                        <table id="tables">
+                            <thead>
+                                <tr id="tables-columns">
+                                    <th id="id">ID Historial</th>
+                                    <th id="paciente">Paciente</th>
+                                    <th id="fecha">Fecha</th>
+                                    <th id="estado-clinico">Estado clinico</th>
+                                    <th id="descripcion-general">Descripcion general</th>
+                                    <th id="acciones">Acciones</th>                        
+                                </tr>
+                            </thead>
+                            <tbody id="historial-body">
+                                <!-- Las filas de historial se generarán dinámicamente aquí -->
+                            </tbody>
+                        </table>
+                        <div id="paging">
+                            <div id="previous-btn">
+                                <button>
+                                    <img src="../assets/slider/leftArrow.png">
+                                </button>
+                            </div>
+                            <div id="pages">
+                                
+                            </div>
+                            <div id="next-page">
+                                <button>
+                                    <img src="../assets/slider/rightArrow.png">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        </section>
+    </main>
+</header>
+
+<body>
+    <div id="overlay">
+        <div id="addhistorial-container">
+            <div id="addhistorial-title">
+                <h2>Nueva historia clinica</h2>
+            </div>
+            <form id="addhistorial-form">
+                <label for="paciente">Paciente</label>
+                <input type="text" id="pacienteBuscador" name="paciente" placeholder="Busque y/o seleccione paciente" list="listaPacientes">
+                <datalist id="listaPacientes"></datalist>
+                
+                <label for="pesoPaciente">Peso Paciente</label>
+                <input type="text" id="pesoPaciente" name="pesoPaciente">               
+
+                <label for="alturaPaciente">Altura paciente</label>
+                <input type="text" id="alturaPaciente" name="alturaPaciente">
+
+                <label for="grupoSanguineo">Grupo sanguineo</label>
+                <select id="grupoSanguineo" name="grupoSanguineo">
+                    <option value="" disabled selected hidden>Seleccione grupo sanguineo</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>                    
+                </select>
+
+                <label for="antecedentesPersonales">Antecedentes personales</label>
+                <textarea id="antecedentesPersonales" name="antecedentesPersonales"></textarea>
+
+                <label for="antecedentesFamiliares">Antecedentes familiares</label>
+                <textarea id="antecedentesFamiliares" name="antecedentesFamiliares"></textarea>
+
+                <label for="descripcionGeneral">Descripcion general</label>
+                <textarea id="descripcionGeneral" name="descripcionGeneral"></textarea>
+
+                <label for="procedimientosQuirurgicos">Procedimientos quirurgicos</label>
+                <textarea id="procedimientosQuirurgicos" name="procedimientosQuirurgicos"></textarea>
+
+                <label for="estadoClinico">Estado clinico</label>
+                <select id="estadoClinico" name="estadoClinico">
+                    <option value="" disabled selected hidden>Seleccione estado clinico</option>
+                    <option value="En seguimiento">En seguimiento</option>
+                    <option value="En tratamiento">En tratamiento</option>
+                    <option value="Estable">Estable</option>
+                    <option value="Dado de alta">Dado de alta</option>
+                </select>
+
+            <div id="buttons">
+                <button type="submit" id="submit">Guardar</button>
+                <button type="button" id="cancel">Cerrar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+<script src="scripts/protectRoute.js"></script>
+<script src="scripts/global.js"></script>
+<script src="scripts/sessionManager.js"></script>
+<script src="scripts/historial.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Meditech S.A - Contacto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/global.css">
+</head>
+
+<header>
+        <section class="panel-superior">
+            <div class="box-superior">
+                <img src="../assets/icons/dudaSuperior.png" alt="Dudas">
+                <p>¿Inconvenientes o dudas?, ¡Llámamos!: <u>01 8000 XXXX</u></p>
+            </div>
+            <div class="box-superior">
+                <img src="../assets/icons/relojSuperior.png" alt="Horario">
+                <p>Horario: Lun - Vie 8:00 - 18:00</p>
+            </div>
+        </section>
+    <img src="../assets/logos/logoMeditech.svg" class="logo">
+    
+        <section class="btn-section">
+            <button class="btn-inicio">Inicio</button>
+                <p>|</p>
+            <button class="btn-servicios">Servicios</button>
+                <p>|</p>
+            <button class="btn-contacto">Contacto</button>
+                <p>|</p>
+            <button class="btn-sesion">Iniciar sesion</button>
+        </section>
+</header>
+
+<body>
+    <!-- Pantalla de carga -->
+    <div id="loader-container" class="loader-active">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <section id="title">
+        <div id="contactmain-container">
+            <h1>¿Tienes preguntas?</h1>
+            <h2>Estamos para ayudarte.<br>
+                Ponemos a disposición nuestros canales de atención.
+            </h2>
+        </div>
+    </section>
+
+<section id="contact-form">
+    <div id="background-blur"></div>
+    <div id="form-container">
+        <h1>Contáctanos</h1>
+        <form>
+            <label for="nombre">Nombres completos</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" required>
+
+            <label for="correo">Correo electrónico</label>
+            <input type="email" id="correo" name="correo" placeholder="Correo electrónico" required>
+
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje aquí..." required></textarea>
+
+            <div id="checkbox">
+                <label for="autorizacion">¿Autoriza tratamiento de datos?</label>
+                <input type="checkbox" id="autorizacion" name="autorizacion">
+            </div>
+
+            <button type="submit">Enviar mensaje</button>
+        </form>
+    </div>
+</section>
+
+<div id="information-container">
+    <div id="phone-contact">
+        <img src="../assets/icons/telefono.png">
+        <h3>Llamanos</h3>
+        <p>01 8000 XXXX</p>
+    </div>
+    <div id="email-contact">
+        <img src="../assets/icons/correo_electronico.png">
+        <h3>Escríbenos</h3>
+        <p><u>servicioalcliente@meditech.com.co</u></p>
+    </div>
+    <div id="ubication-contact">
+        <img src="../assets/icons/ubicacion.png">
+        <h3>Domicilio</h3>
+        <p>Bogota D.C, Cra. XX #XX-XX</p>
+    </div>
+</div>
+
+
+</body>
+    <script src="scripts/global.js"></script>
+    <script src="scripts/contacto.js"></script>
+
+<footer>
+    <section class="footer-container">
+        <div class="logoMeditech">
+            <img src="../assets/logos/logoMeditech-blanco.svg">
+        </div>
+        <div class="logos">
+            <img class="logoMin" src="../assets/logos/logoMin.png">
+            <img class="logoSupersalud" src="../assets/logos/logoSupersalud.png">
+        </div>
+        <div class="contact-section">
+            <div class="whatsapp">
+                <img src="../assets/icons/whatsapp.png">
+                <p>WhatsApp: 304 320 XXXX</p>
+            </div>
+            <div class="phone">
+                <img src="../assets/icons/llamar.png">
+                <p>Linea nacional: 01 8000 XXXX</p>
+            </div>
+            <div class="ubication">
+                <img src="../assets/icons/mapa.png">
+                <p>Bogota D.C, Cra. XX #XX-XX</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© Copyright Entidad Promotora de Salud Meditech SAS - Derechos reservados</p>
+         </div>
+    </section>
+</footer>

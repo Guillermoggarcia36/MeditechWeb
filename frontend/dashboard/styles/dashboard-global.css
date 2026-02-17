@@ -1,0 +1,1294 @@
+.swal2-popup {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* ==================== LOADER / PANTALLA DE CARGA ==================== */
+#loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #498EC9 0%, #2d5a8c 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+#loader-container.loader-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+#loader-container.loader-inactive {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-content p {
+    color: white;
+    font-size: 1.2rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+/* ==================== FIN LOADER ==================== */
+
+div {
+    transition: all 0.65 ease-in-out;
+}
+
+.main-container {
+    display: grid;
+    margin-top: 0.6%;
+    grid-template-columns: auto 0.8fr auto;
+    grid-template-areas: 
+        "logo date-time user"
+        "sidebar content-area content-area";
+    transform: translateY(-8px);
+    border: 2px solid rgba(128, 128, 128, 0.171);
+    border-radius: 12px;
+    box-shadow: 2px 20px 20px 20px rgba(128, 128, 128, 0.171);
+}
+
+.logo-dashboard {
+    grid-area: logo;
+    box-shadow: 0px 6px 20px 2px rgba(128, 128, 128, 0.171);
+    text-align: center;
+}
+
+.logo-dashboard img {
+    width: 90%;
+}
+
+.date-time {
+    box-shadow: 0px 10px 20px 2px rgba(128, 128, 128, 0.171);
+    grid-area: date-time;
+    margin: 0%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: center;
+    padding-right: 60%;
+    padding-top: 1%;
+    opacity: 85%;
+    line-height: 0.5;
+}
+
+.user {
+    grid-area: user;
+    padding-left: 35%;
+    box-shadow: 0px 0px 20px 2px rgba(128, 128, 128, 0.171);
+}
+
+.user img {
+    width: 10px;
+    opacity: 60%;
+}
+
+#btn-user {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0);
+    cursor: pointer;
+    border-radius: 3px;
+    border: none;
+}
+
+#btn-user p {
+    font-family: 'Segoe Ui', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    opacity: 80%;
+}
+
+#btn-user img {
+    width: 18px;
+    height: 18px;
+    background-color: none;
+    margin-top: 2%;
+    margin-left: 12px
+}
+
+#user-options {
+    display: none;
+}
+
+#logOut{
+    position: absolute;
+    color: rgb(221, 0, 0);
+    top: 65px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    text-align: start;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.119)
+}
+
+#logOut p {
+    font-family: 'Segoe Ui', sans-serif;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+#logOut img {
+    width: 18px;
+    height: 18px;
+    background-color: none;
+    margin-top: 2%;
+    margin-left: 12px
+}
+
+#logOut:hover {
+    background-color: rgb(255, 199, 199);
+}
+
+#sidebar-container {
+    background-color: #498EC9;
+    padding-bottom: 110%;
+    border-radius: 0px 0px 0px 12px;
+}
+
+#sidebar-container button {
+    color: white;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: 4%;
+    padding: 1%;
+    border: none;
+}
+
+#sidebar-container button:hover {
+    background-color: rgba(255, 255, 255, 0.171);
+}
+
+#usuarios-btn, #inicio-btn, #citas-btn, #historial-btn {
+    display: grid;
+    grid-template-areas: 
+        "img text";
+    cursor: pointer;
+    width: 100%;
+}
+
+#usuarios-btn img, #inicio-btn img, #citas-btn img, #historial-btn img {
+    width: 36px;
+    grid-area: img;
+    margin-left: 7%;
+    margin-top: 4%;
+}
+
+#usuarios-btn p, #inicio-btn p, #citas-btn p, #historial-btn p {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    grid-area: text;
+    margin: 4%;
+    text-align: start;
+}
+
+
+#content-area {
+    grid-area: content-area;
+}
+
+#user-container {
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+#title-content h1 {
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 400;
+    font-size: 2.1rem;
+    padding-left: 4%;
+    opacity: 80%;
+}
+
+.content-container {
+    border-radius: 2px;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 20px 20px 20px rgba(128, 128, 128, 0.171);
+}
+
+#search {
+    display: flex;
+    background-color: #498EC9;
+    margin-bottom: 1.5%;
+    padding: 1%;
+    border-radius: 2px 2px 0px 0px;
+    justify-content: space-between;
+}
+
+#search label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1.5rem;
+    color: white;
+    margin-left: 10%;
+}
+
+#search input {
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding-top: 2%;
+    border: none;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.205);
+    color: white;
+}
+
+#btn-adduser {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid white;
+    border-radius: 2px;
+    color: white;
+    padding-left: 1%;
+    padding-right: 1%;
+    cursor: pointer;
+}
+
+#btn-adduser:hover {
+    background-color: rgba(255, 255, 255, 0.171);
+}
+
+#options {
+    font-size: 3rem;
+    padding: 0%;
+    padding-bottom: 1%;
+    pointer-events: none;
+}
+
+#tables {
+    margin-bottom: 1%;
+    margin-left: 1%;
+    margin-right: 1%;
+    font-family: 'Segoe UI', sans-serif;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.094);
+    border-spacing: 0;
+    background-color: white;
+    border-spacing: 0px 10px; /* horizontal | vertical */
+    height: 46vh;
+}
+
+
+#tables img {
+    width: 24px;
+    height: 24px;
+}
+
+#tables th {
+    cursor: pointer;
+    background-color: rgba(128, 128, 128, 0.118);
+}
+
+#tables-data img {
+    cursor: pointer;
+}
+
+.edit-btn, .delete-btn {
+    cursor: pointer;
+}
+
+#adduser-container {
+    display: none;
+    grid-template-areas: 
+        "title title"
+        "form form"
+        "buttons buttons";
+    margin-left: 30%;
+    margin-right: 45%;
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+    border-radius: 5px;
+    position: fixed;
+    top: 5vh;
+    width: 30%;
+    height: 85%;
+    overflow-y: scroll;
+    animation: fadeIn 0.65s;
+}
+
+#adduser-title {
+    position: sticky;
+    top: 0;
+    font-size: 1rem;
+    background-color: #498EC9;
+    color: white;
+    margin: 0;
+    padding: 1px;
+    padding-bottom: 1;
+    grid-area: title;
+}
+
+#adduser-title h2 {
+    margin-left: 3%;
+}
+
+#adduser-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 1.2rem;
+    font-weight: 600;
+    grid-area: form;
+}
+
+#adduser-form label {
+    color: #498EC9;
+    margin-top: 5%;
+}
+
+#adduser-form p {
+    color: red;
+    font-size: 1rem;
+    display: none;
+}
+
+#adduser-form input {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    background: none;
+    box-shadow: rgba(128, 128, 128, 0.452) 0px 1px 0px 0px;
+    outline: none;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#adduser-form img {
+    width: 34px;
+    height: 34px;
+    border: 1px solid black;
+}
+
+#adduser-form select {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    margin-right: 69%;
+    text-align: start
+}
+
+.incorrect {
+    box-shadow: none;
+    border-bottom: 1.5px solid red;
+    background-image: url("../../assets/icons/incorrecto.png");
+}
+
+.correct {
+    box-shadow: none;
+    border-bottom: 1.5px solid green;
+    background-image: url("../../assets/icons/correcto.png");
+}
+
+#buttons {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    padding: 4%;
+    background-color: white;
+    border-top: 1px solid rgba(26, 26, 26, 0.452);
+    text-align: end;
+}
+
+#submit {
+    display: block;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    font-size: 1.3rem;
+    border: none;
+    background-color: #498EC9;
+    color: white;
+    margin-right: 10%;
+    cursor: pointer;
+}
+
+#save-changes {
+    display: block;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    font-size: 1.3rem;
+    border: none;
+    background-color: #498EC9;
+    color: white;
+    margin-right: 10%;
+    cursor: pointer;
+}
+
+#cancel {
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    font-size: 1.3rem;
+    border: none;
+    background-color: white;
+    margin-right: 2%;
+    cursor: pointer;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+}
+
+#restablecer {
+    text-align: end;
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+}
+
+#overlay.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+#paging {
+    display: flex;
+    justify-content: center;
+    gap: 1%;
+    margin-bottom: 1%;
+    width: 90%;
+    position: relative;
+    margin-top: auto;
+}
+
+#paging button {
+    border: none;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    border-radius: 2px;
+    justify-content: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+#paging button:hover {
+    background-color: #498dc950;
+}
+
+#paging .page-btn {
+    min-width: 40px;
+    font-weight: 500;
+}
+
+#paging .page-btn.active {
+    background-color: #498EC9;
+    color: white;
+    border-color: #498EC9;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(73, 142, 201, 0.4);
+}
+
+#paging img {
+    width: 12px;
+}
+
+#notFound {
+    color: red;
+    font-size: 50rem;
+}
+
+#citas-container {
+    width: 30%;
+    margin-left: 30%;
+    margin-right: 20%;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    border-radius: 5px;
+    position: relative; 
+    box-shadow: none;
+}
+
+#citas-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0px;     /* Ajusta la posición de inicio */
+  width: var(--barra-width, 5%);   /* Largo limitado */
+  height: 5px;    /* Grosor */
+  background: var(--barra-color, white);
+  border-radius: 2px 0px 0px 0px;
+  transition: width 0.5s ease;
+}
+
+#select-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+#select-menu button {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-top: 30%;
+    margin-bottom: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-radius: 8px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;   /* centra vertical */
+    justify-content: center; /* mantiene icono+texto centrados */
+    gap: 10px; /* espacio entre icono y texto */
+}
+
+#select-menu img {
+    width: 24px;
+    height: 24px;
+}
+
+#select-menu button:hover {
+    background-color: #498dc9a4;    
+}
+
+
+#options-sedes button:hover, #options-medicos button:hover {
+    background-color: #53a2e7a4;  
+    color: white;
+}
+
+#searchInput-cita {
+    width: 20vw;
+    height: 5vh;
+    margin-top: 2%;
+    margin-left: 5%;
+    border: 1px solid rgba(128, 128, 128, 0.682);
+    border-radius: 4px;
+    font-size: larger;    
+}
+
+#buscadorSede::placeholder {
+    opacity: 40%;
+}
+
+#new-cita {
+    background-color: #498EC9;
+    color: white;
+    border: none;
+}
+
+#consult-cita {
+    border: 1px solid #498EC9;
+    background-color: white;
+    color: #080808c1;
+}
+
+#schedule-cita {
+    display: none;
+    font-family: 'Roboto', sans-serif;
+    margin: 1%;
+}
+
+#subtitle-content {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.321);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#subtitle-content h2 {
+    margin-left: 5%;
+}
+
+#backBtn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    margin-top: 40%;
+}
+
+#backBtnimg {
+    width: 16px;
+    height: 16px;
+}
+
+#select-content h2 {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-left: 5%;
+    margin-top: 2%;
+}
+
+#buttons-schedule {
+    display: flex;
+    background-color: white;
+    gap: 2%;
+    justify-content: end;
+    margin-right: 10%;
+    margin-left: 10%;
+    border-top: 1px solid rgba(128, 128, 128, 0.297);  
+}
+
+#buttons-schedule button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    width: 10%;
+    height: 100%;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;   
+    margin-top: 1.5%;
+    margin-bottom: 1.5%; 
+}
+
+#buttons-schedule button:hover {
+    background-color: #7ebcf3b0;
+    color: white;
+}
+
+#cancel-btn {
+    color: #498EC9;
+}
+
+#next-btn {
+    color: white;
+    background-color: #498EC9;
+    display: flex;
+    gap: 10px;
+    justify-content: center;  /* centra horizontalmente */
+    align-items: center;             /* centra verticalmente */    
+    opacity: 40%;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+#next-btn img {
+    width: 22px;
+}
+
+#options-sedes {
+    justify-items: center;
+    height: 25vh;        /* tamaño fijo */
+    overflow-x: hidden;   /* no scroll horizontal (opcional) */
+    border: none;
+}
+
+#options-sedes img {
+    width: 16px;
+    margin-left: 10%;
+}
+
+#options-medicos {
+    justify-items: center;
+    height: 25vh;        /* tamaño fijo */
+    overflow-x: hidden;   /* no scroll horizontal (opcional) */
+    border: none;
+    display: none;
+}
+
+#options-medicos img {
+    width: 16px;
+    margin-left: 10%;
+}
+
+#options-calendario {
+    margin-top: 4%;
+    font-size: 1.3rem;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    width: 15%;
+    height: 30vh;
+    justify-self: center;
+    flex-direction: column;
+    overflow-x: hidden;   /* no scroll horizontal (opcional) */
+    border: none;
+    display: none;
+}
+
+#options-calendario label {
+    margin-bottom: 7%;
+}
+
+#options-calendario input {
+    border-radius: 5px;
+    margin-bottom: 25%;
+    font-family: 'Roboto', sans-serif;
+    padding: 5%;    
+}
+
+#options-calendario select {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 25%;
+    font-family: 'Roboto', sans-serif;
+    padding: 5%;      
+}
+
+#resumen-cita {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    margin: 5%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+#consult-menu {
+    display: none;
+    font-family: 'Roboto', sans-serif;
+    margin: 2%;
+}
+
+#search-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#searchInput-consult {
+    margin: 1%;
+    width: 30vw;
+    height: 3vh;
+    margin-top: 1%;
+    border: 1px solid rgba(128, 128, 128, 0.682);
+    border-radius: 4px;
+    font-size: 18px;
+    grid-area: buscar;
+}
+
+
+#tables-citas {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    border-bottom: none;
+    border-right: none;
+    border-spacing: 8px 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 1%;
+    margin-left: 1%;
+    margin-right: 1%;
+    border-radius: 10px 10px 10px 10px;
+    border-spacing: 0;
+    background-color: white;
+    border-spacing: 0px 10px; /* horizontal | vertical */
+    border: 1px solid rgba(0, 0, 0, 0.094);
+}
+
+
+#tables-citas th {
+    cursor: pointer;
+    background-color: rgba(128, 128, 128, 0.177);
+}
+
+#tables-citas table td {
+    font-weight: 600;
+    padding: 1%;
+}
+
+#citas-container table td {
+    font-size: 1rem;
+    padding: 0.7%;
+}
+
+#tables-columns-citas p {
+    font-weight: 500;
+}
+
+#tables-columns-citas img {
+    width: 20px;
+}
+
+#tables-columns-citas td {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cancelCita-btn {
+    cursor: pointer;
+}
+
+.cancelCita-btn img {
+    width: 32px;
+}
+
+#search-historial {
+    margin: 1%;
+    width: 30vw;
+    height: 3vh;
+    margin-top: 1%;
+    border: 1px solid rgba(128, 128, 128, 0.682);
+    border-radius: 4px;
+    border: none;
+}
+
+#searchInput-historial {
+    margin: 6%;
+    width: 30vw;
+    height: 4vh;
+    margin-top: 1%;
+    border: 1px solid rgba(128, 128, 128, 0.682);
+    border-radius: 4px;
+    font-size: 1.3rem;
+}
+
+#searchInput-historial::placeholder {
+    opacity: 40%;
+}
+
+#nuevo-registro {
+    margin-top: 3%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+}
+
+#nuevo-registroBtn {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-radius: 5px;
+    background-color: #498EC9;
+    color: white;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 10vw;
+}
+
+#nuevo-registroBtn img {
+    width: 26px;
+    margin-left: 5%;
+}
+
+#nuevo-registroBtn:hover {
+    background-color: #498dc9a4;
+}
+
+
+#addhistorial-container {
+    display: none;
+    flex-direction: column;
+    margin-left: 30%;
+    margin-right: 45%;
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+    border-radius: 5px;
+    position: fixed;
+    top: 5vh;
+    width: 40%;
+    height: 85%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    animation: fadeIn 0.65s;
+}
+
+#addhistorial-title {
+    position: sticky;
+    top: 0;
+    font-size: 1rem;
+    background-color: #498EC9;
+    color: white;
+    margin: 0;
+    padding: 1px;
+    padding-bottom: 1;
+    grid-area: title;
+}
+
+#addhistorial-title h2 {
+    margin-left: 3%;
+}
+
+#addhistorial-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 1.2rem;
+    font-weight: 600;
+    grid-area: form;
+}
+
+#addhistorial-form label {
+    color: #498EC9;
+    margin-top: 5%;
+}
+
+#addhistorial-form p {
+    color: red;
+    font-size: 1rem;
+    display: none;
+}
+
+#addhistorial-form input {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    background: none;
+    box-shadow: rgba(128, 128, 128, 0.452) 0px 1px 0px 0px;
+    outline: none;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#addhistorial-form img {
+    width: 34px;
+    height: 34px;
+    border: 1px solid black;
+}
+
+#addhistorial-form select {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    margin-right: 69%;
+    text-align: start
+}
+
+#addhistorial-form textarea {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    height: 50vh;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding: 5%;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.452);
+}
+
+#ver-detalles {
+    font-family: 'Roboto', sans-serif;
+    background-color: #498EC9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8%;
+    cursor: pointer;
+}
+
+#ver-detalles:hover {
+    background-color: #498dc9a4;
+}
+
+#resumen-historial {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    margin: 3%;
+    display: grid;
+    justify-items: center;
+    grid-template-areas: 
+        "generalInfo acciones"
+        "consultas consultas"
+        "procedimientos procedimientos";
+    gap: 15px;
+}
+
+#generalInfo-container {
+    border: 1px solid rgba(128, 128, 128, 0.22);    
+    border-radius: 7px;
+    grid-area: generalInfo;
+    width: 100%;
+
+    font-size: 1rem;
+    grid-template-areas: 
+        "icono . codigo"
+        "icono nombre ."
+        "icono id-paciente sexo"
+        "icono fecha-nacimiento rh"
+        "icono edad ."
+}
+
+#generalInfo-container img {
+    margin-top: 40%;
+}
+
+#generalInfo-container p {
+    font-family: 'Roboto', sans-serif;
+    margin-top: 5%;
+}
+
+#paciente-icono {
+    grid-area: icono;
+}
+
+#nombre-paciente {
+    font-size: 2rem;
+    font-weight: 700;
+    grid-area: nombre;
+    margin-right: 30%;
+}
+
+#id-paciente {
+    grid-area: id-paciente;
+}
+
+#fecha-nacimiento {
+    grid-area: fecha-nacimiento;
+}
+
+#sexo {
+    grid-area: sexo;
+}
+
+#rh {
+    grid-area: rh;
+}
+
+#edad {
+    grid-area: edad;
+}
+
+#codigo-historial {
+    font-size: 0.9rem;
+    color: rgba(73, 142, 201, 0.8);
+    grid-area: codigo;
+}
+
+#consultas-container {
+    border: 1px solid rgba(128, 128, 128, 0.22);    
+    border-radius: 7px;
+    grid-area: consultas;
+    width: 100%;    
+}
+
+#procedimientos-container {
+    border: 1px solid rgba(128, 128, 128, 0.22);    
+    border-radius: 7px;
+    grid-area: procedimientos;
+    width: 100%;
+}
+
+#acciones-container {
+    border: 1px solid rgba(128, 128, 128, 0.22);    
+    border-radius: 7px;
+    grid-area: acciones;
+    width: 70%;
+    display: grid;
+}
+
+#acciones-container img {
+    width: 20px;
+}
+
+#acciones-container h2 {
+    margin-left: 5%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.22);
+}
+
+#acciones-container button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5%;
+    border-radius: 5px;
+    border: none;
+    background-color: #498EC9;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#acciones-container button:hover {
+    background-color: #498dc9a4;
+}
+
+#title-content {
+    display: flex;
+    margin-right: 10%;
+    justify-content: space-between;
+}
+
+
+#back-container {
+    opacity: 80%;
+}
+
+#back-container button {
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+}    
+
+
+.options-btn {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    width: 500px;
+    margin-top: 3%;
+    margin-bottom: 2%;    
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.235);
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.40s ease,
+                color 0.5s ease;
+}
+
+.options-btn.opcion-seleccionada{
+    background-color: #53a2e7a4; 
+    color: white;   
+    transition: all 1s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@keyframes slideInGeneral {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#adduser-form input[type=number]::-webkit-outer-spin-button,
+#adduser-form input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+    margin: 0;
+}
+
+#rol{
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.493);
+    outline: none;
+}
+
+#tipodocumentoData, #telefonoData, #correoData {
+    display: none;
+}
+
+/* ==================== PAGINACIÓN ==================== */
+#pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#pagination-controls button {
+    padding: 8px 12px;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+#pagination-controls button:hover:not(:disabled) {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+#pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: #999;
+}
+
+#pagination-controls button.active {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    font-weight: 600;
+}
+
+#pagination-controls .page-number {
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+}
+.emptycamps-alert, .formsubmited, .inactivationPopup {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 5%;
+}

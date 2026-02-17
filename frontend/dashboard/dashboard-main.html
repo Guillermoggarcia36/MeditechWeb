@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/dashboard-global.css">
+    <link rel="icon" href="../assets/icons/iconoMeditech.ico" type="image/x-icon">    
+</head>
+
+<!-- Loader -->
+<div id="loader-container" class="loader-active">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+</div>
+
+<header>
+    <main class="main-container">
+        <div class="logo-dashboard">
+            <img src="../assets/logos/logoMeditech.svg">
+        </div>
+        <div class="date-time">
+            <p id="time"></p>
+            <p id="date"></p>
+        </div>
+        <div class="user">
+            <button id="btn-user">
+                <p id="name-user"></p>
+                <img src="../assets/icons/lista.png">
+            </button>
+            <div id="user-options">
+                <button id="logOut">
+                    <p>Cerrar sesion</p>
+                    <img src="../assets/icons/cerrarSesion.png">
+                </button>
+            </div>
+        </div>
+        <div id="sidebar-container">
+            <button id="inicio-btn">
+                <p>Inicio</p>
+                <img src="../assets/icons/casa.png">
+            </button>
+            <button id="usuarios-btn">
+                <p>Usuarios</p>
+                <img src="../assets/icons/usuario3.png">
+            </button>
+            <button id="citas-btn">
+                <p>Citas medicas</p>
+                <img src="../assets/icons/cita-medica.png">
+            </button>
+            <button id="historial-btn">
+                <p>Historial medico</p>
+                <img src="../assets/icons/historialMedico.png">
+            </button>            
+        </div>
+    </main>
+</header>
+
+<script src="scripts/protectRoute.js"></script>
+<script src="scripts/global.js"></script>
+<script src="scripts/sessionManager.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

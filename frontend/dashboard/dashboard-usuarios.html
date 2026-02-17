@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/dashboard-global.css">
+    <link rel="icon" href="../assets/icons/iconoMeditech.ico" type="image/x-icon">    
+</head>
+
+<!-- Loader -->
+<div id="loader-container" class="loader-active">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+</div>
+
+<style>
+    #content-container {
+        box-shadow: 2px 20px 20px 20px rgba(128, 128, 128, 0.171)
+    }
+</style>
+
+<header>
+    <main class="main-container">
+        <div class="logo-dashboard">
+            <img src="../assets/logos/logoMeditech.svg">
+        </div>
+        <div class="date-time">
+            <p id="time"></p>
+            <p id="date"></p>
+        </div>
+        <div class="user">
+            <button id="btn-user">
+                <p id="name-user"></p>
+                <img src="../assets/icons/lista.png">
+            </button>
+            <div id="user-options">
+                <button id="logOut">
+                    <p>Cerrar sesion</p>
+                    <img src="../assets/icons/cerrarSesion.png">
+                </button>
+            </div>
+        </div>
+        <div id="sidebar-container">
+            <button id="inicio-btn">
+                <p>Inicio</p>
+                <img src="../assets/icons/casa.png">
+            </button>
+            <button id="usuarios-btn">
+                <p>Usuarios</p>
+                <img src="../assets/icons/usuario3.png">
+            </button>
+            <button id="citas-btn">
+                <p>Citas medicas</p>
+                <img src="../assets/icons/cita-medica.png">
+            </button>
+            <button id="historial-btn">
+                <p>Historial medico</p>
+                <img src="../assets/icons/historialMedico.png">
+            </button>            
+        </div>
+        
+        <section id="content-area">
+                <div id="title-content">
+                    <h1>Usuarios</h1>
+                </div>
+                <div id="user-container">
+                    <div class="content-container">
+                        <div id="search">
+                            <label for="busqueda">Buscar:
+                                <input type="text" id="form-busqueda" name="busqueda">
+                            </label>
+                            <button id="btn-adduser">Agregar usuario</button>
+                        </div>
+                        
+                        <table id="tables">
+                            <thead>
+                                <tr id="tables-columns">
+                                    <th id="id">ID <img src="../assets/icons/flechas-arriba-y-abajo.png"></th>
+                                    <th id="Nombres">Nombres <img src="../assets/icons/flechas-arriba-y-abajo.png"></th>
+                                    <th id="Apellidos">Apellidos <img src="../assets/icons/flechas-arriba-y-abajo.png"></th>
+                                    <th id="Rol">Rol <img src="../assets/icons/flechas-arriba-y-abajo.png"></th>
+                                    <th id="Activo">Activo <img src="../assets/icons/flechas-arriba-y-abajo.png"></th>
+                                    <th id="options">...</th>
+                                </tr>
+                            </thead>
+                                <tbody id="usuarios-body">
+                                </tbody>
+                        </table>
+                        <div id="paging">
+                            <div id="previous-btn">
+                                <button>
+                                    <img src="../assets/slider/leftArrow.png">
+                                </button>
+                            </div>
+                            <div id="pages">
+                                
+                            </div>
+                            <div id="next-page">
+                                <button>
+                                    <img src="../assets/slider/rightArrow.png">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </main>
+</header>
+
+<body>
+    <div id="overlay">
+        <div id="adduser-container">
+            <div id="adduser-title">
+                <h2>Usuarios</h2>
+            </div>
+            <form id="adduser-form">
+                <label for="idusuario">Id de usuario</label>
+                <input type="number" id="idusuario" name="idusuario" maxlength="12">
+                <p id="erroridusuario">Error: numero documento incompleto o campo vacio</p>
+                <p id="idusuarioduplicado">Error: ID de usuario ya existe en base de datos</p>
+                <div id="restablecer">Restablecer contraseña</div>
+                
+                <label for="nombres">Nombres</label>
+                <input type="text" id="nombres" name="nombres">
+                <p id="errornombres">Error: campo no debe conteneder numeros o vacio</p>                
+
+                <label for="Apellidos">Apellidos</label>
+                <input type="text" id="apellidos" name="apellidos">
+                <p id="errorapellidos">Error: campo no debe conteneder numeros o este se encuentra vacio</p>   
+
+                <label for="rol">Rol usuario</label>
+                <select id="rol" name="rol">
+                    <option value="" disabled selected hidden>Seleccione un rol</option>
+                    <option value="1">Administrativo</option>
+                    <option value="2">Medico</option>
+                    <option value="3">Paciente</option>
+                    <option value="4">Enfermeria</option>
+                </select>
+
+                <label for="tipodocumento">Tipo documento</label>
+                <select id="tipodocumento" name="tipodocumento">
+                    <option value="" disabled selected hidden>Seleccione tipo de documento</option>
+                    <option value="CC">CC</option>
+                    <option value="CE">CE</option>
+                    <option value="PPT">PPT</option>
+                    <option value="PP">PP</option>
+                    <option value="PT">PT</option>   
+                    <option value="TI">TI</option>                                        
+                </select>
+
+                <label for="telefono">Telefono</label>
+                <input type="text" id="telefono" name="telefono">
+                <p id="errortelefono">Error: numero de telefono incompleto o campo vacio</p>
+
+                <label for="correo">Correo electronico</label>
+                <input type="email" id="correo" name="correo">
+                <p id="errorcorreo">Error: direccion de correo incompleto o invalido, debe de ingresar @</p>
+
+                <label for="estado">Usuario activo
+                    <input type="checkbox" id="checkbox" name="estado">
+                </label>
+            <div id="buttons">
+                <button type="submit" id="submit">Guardar</button>
+                <button type="submit" id="save-changes">Guardar cambios</button>
+                <button type="button" id="cancel">Cerrar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+<script src="scripts/protectRoute.js"></script>
+<script src="scripts/global.js"></script>
+<script src="scripts/sessionManager.js"></script>
+<script src="scripts/users.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

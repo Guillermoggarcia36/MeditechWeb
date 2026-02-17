@@ -1,0 +1,29 @@
+###
+GET http://localhost:9000/users HTTP/1.1
+
+###
+POST http://localhost:9000/users HTTP/1.1
+Content-Type: application/json
+
+###
+PUT http://localhost:9000/users HTTP/1.1
+Content-Type: application/json
+
+###
+POST http://localhost:9000/historial HTTP/1.1
+Content-Type: application/json
+
+{
+    "id_pacienteFK": 1007975398,
+    "fecha_registro": "2024-06-01",
+    "peso_paciente": 70,
+    "altura_paciente": 1.75,
+    "grupo_sanguineo": "O+",
+    "antecedentes_personales": "Ninguno",
+    "antecedentes_familiares": "Diabetes",
+    "procedimientos_quirurgicos": "Apendicectomía",
+    "descripcion_general": "Paciente en buen estado general.",
+    "estado_clinico": "Estable",
+    "fecha_nacimiento": "1990-01-01",
+    "sexo": "Masculino"
+}
