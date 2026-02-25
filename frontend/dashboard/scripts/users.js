@@ -172,7 +172,6 @@ async function creationUser() {
         const data = await response.json();
         console.log("Usuario creado:", data.message || data);
         traerDatos();
-
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }

@@ -20,13 +20,13 @@ const dbOptions = {
   database: 'meditechbd'
 };
 
-// ✅ Middleware CORS (solo para desarrollo)
+// Middleware CORS (solo para desarrollo)
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 
-// ✅ Middleware para desactivar caché
+// Middleware para desactivar cache
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
@@ -34,25 +34,25 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Middleware conexión MySQL y parseo JSON
+// Middleware conexión MySQL y parseo JSON
 app.use(myconn(mysql, dbOptions, 'single'));
 app.use(express.json());
 
-// ✅ Rutas
+// Rutas
 app.get('/', (req, res) => {
-  res.send('Servidor Meditech activo 🩺');
+  res.send('Servidor Meditech activo');
 });
 
 app.use('/users', userRoutes);
 app.use('/citas', citasRoutes);
 app.use('/historial', historialRoutes);
 
-// ✅ Servidor corriendo
+// Servidor corriendo
 app.listen(app.get('port'), () => {
   console.log('Servidor corriendo en el puerto:', app.get('port'));
 });
 
-// (Opcional) Probar conexión a base de datos una vez
+// Mensaje de prueba a conexión a base de datos
 mysql.createConnection(dbOptions).connect((err) => {
   if (err) {
     console.error('Error al conectar a la base de datos:', err.stack);

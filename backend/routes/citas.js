@@ -5,7 +5,7 @@ const routes = express.Router();
 routes.get('/sedes', (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
-        conn.query('SELECT * FROM sedes ORDER BY id_cita', (err, rows) => {
+        conn.query('SELECT * FROM sedes', (err, rows) => {
             if (err) return res.send(err);
             res.json(rows);
         });
@@ -102,7 +102,7 @@ routes.put("/confirmar", (req, res) => {
 routes.get('/', (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
-        conn.query('SELECT citas.id_cita, citas.codigo_cita, citas.fecha, citas.hora, citas.estado_cita, sedes.id_sede, sedes.nombre_sede, sedes.direccion, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido, usuarios_medicos.nombres AS medico_nombre, usuarios_medicos.apellidos AS medico_apellidos FROM citas INNER JOIN usuarios AS usuarios_paciente ON citas.id_pacienteFK = usuarios_paciente.id_usuario INNER JOIN usuarios AS usuarios_medicos ON citas.id_medicoFK = usuarios_medicos.id_usuario INNER JOIN sedes ON citas.id_sedeFK = sedes.id_sede;', (err, rows) => {
+        conn.query('SELECT citas.id_cita, citas.codigo_cita, citas.fecha, citas.hora, citas.estado_cita, sedes.id_sede, sedes.nombre_sede, sedes.direccion, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido, usuarios_medicos.nombres AS medico_nombre, usuarios_medicos.apellidos AS medico_apellidos FROM citas INNER JOIN usuarios AS usuarios_paciente ON citas.id_pacienteFK = usuarios_paciente.id_usuario INNER JOIN usuarios AS usuarios_medicos ON citas.id_medicoFK = usuarios_medicos.id_usuario INNER JOIN sedes ON citas.id_sedeFK = sedes.id_sede ORDER BY codigo_cita ASC', (err, rows) => {
             if (err) return res.send(err);
             res.json(rows);
         });

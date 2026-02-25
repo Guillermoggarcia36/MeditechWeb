@@ -131,6 +131,20 @@ btnHistorial.addEventListener("click", () => {
     }, 150); // 150 ms para que se note
 });
 
+const btnInventario = document.getElementById("inventario-btn")
+btnInventario.addEventListener("click", () => {
+    setTimeout(() => {
+        window.location.href = "dashboard-inventario.html";
+    }, 150); // 150 ms para que se note
+});
+
+const btnAutorizaciones = document.getElementById("autorizaciones-btn")
+btnAutorizaciones.addEventListener("click", () => {
+    setTimeout(() => {
+        window.location.href = "dashboard-autorizaciones.html";
+    }, 150); // 150 ms para que se note
+});
+
 // ============================================
 // ✅ INTERCEPTOR GLOBAL PARA ERRORES 401
 // ============================================

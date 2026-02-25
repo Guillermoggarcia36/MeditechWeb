@@ -57,6 +57,20 @@
 
 /* ==================== FIN LOADER ==================== */
 
+#construccion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 10%;
+    margin-left: 30%;
+    font-family: 'Roboto', sans-serif;
+}
+
+#construccion img {
+    width: 200px;
+}
+
 div {
     transition: all 0.65 ease-in-out;
 }
@@ -170,7 +184,7 @@ div {
 
 #sidebar-container {
     background-color: #498EC9;
-    padding-bottom: 110%;
+    padding-bottom: 75%;
     border-radius: 0px 0px 0px 12px;
 }
 
@@ -186,7 +200,7 @@ div {
     background-color: rgba(255, 255, 255, 0.171);
 }
 
-#usuarios-btn, #inicio-btn, #citas-btn, #historial-btn {
+#usuarios-btn, #inicio-btn, #citas-btn, #historial-btn, #inventario-btn, #autorizaciones-btn {
     display: grid;
     grid-template-areas: 
         "img text";
@@ -194,14 +208,14 @@ div {
     width: 100%;
 }
 
-#usuarios-btn img, #inicio-btn img, #citas-btn img, #historial-btn img {
+#usuarios-btn img, #inicio-btn img, #citas-btn img, #historial-btn img, #inventario-btn img, #autorizaciones-btn img {
     width: 36px;
     grid-area: img;
     margin-left: 7%;
     margin-top: 4%;
 }
 
-#usuarios-btn p, #inicio-btn p, #citas-btn p, #historial-btn p {
+#usuarios-btn p, #inicio-btn p, #citas-btn p, #historial-btn p, #inventario-btn p, #autorizaciones-btn p {
     font-family: 'Segoe UI', sans-serif;
     font-size: 1.5rem;
     font-weight: 500;
@@ -859,6 +873,17 @@ div {
     width: 32px;
 }
 
+#back-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+#back-btn:hover {
+    background-color: #498dc91e;
+}
+
 #search-historial {
     margin: 1%;
     width: 30vw;
@@ -1025,14 +1050,14 @@ div {
 #resumen-historial {
     font-family: 'Roboto', sans-serif;
     font-size: 1.5rem;
-    margin: 3%;
+    margin: 1%;
     display: grid;
     justify-items: center;
     grid-template-areas: 
         "generalInfo acciones"
-        "consultas consultas"
-        "procedimientos procedimientos";
-    gap: 15px;
+        "consultas acciones"
+        "procedimientos .";
+    gap: 10px;
 }
 
 #generalInfo-container {
@@ -1043,11 +1068,12 @@ div {
 
     font-size: 1rem;
     grid-template-areas: 
-        "icono . codigo"
-        "icono nombre ."
+        "icono . ."
+        "icono nombre nombre"
         "icono id-paciente sexo"
         "icono fecha-nacimiento rh"
-        "icono edad ."
+        "icono edad antecedentesFamiliares"
+        "icono antecedentesPersonales ."
 }
 
 #generalInfo-container img {
@@ -1090,6 +1116,14 @@ div {
     grid-area: edad;
 }
 
+#antecedentes-personales {
+    grid-area: antecedentesPersonales;
+}
+
+#antecedentes-familiares {
+    grid-area: antecedentesFamiliares;
+}
+
 #codigo-historial {
     font-size: 0.9rem;
     color: rgba(73, 142, 201, 0.8);
@@ -1116,6 +1150,9 @@ div {
     grid-area: acciones;
     width: 70%;
     display: grid;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 #acciones-container img {
@@ -1123,15 +1160,13 @@ div {
 }
 
 #acciones-container h2 {
-    margin-left: 5%;
     border-bottom: 1px solid rgba(128, 128, 128, 0.22);
 }
 
 #acciones-container button {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 5%;
+    justify-content: center;
     border-radius: 5px;
     border: none;
     background-color: #498EC9;
@@ -1144,6 +1179,16 @@ div {
 
 #acciones-container button:hover {
     background-color: #498dc9a4;
+}
+
+#acciones-container select {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.452);
+    padding: 5%;
 }
 
 #title-content {
@@ -1165,7 +1210,75 @@ div {
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     font-weight: 500;
-}    
+}
+
+#consultas-container {
+    border: 1px solid rgba(128, 128, 128, 0.22);    
+    border-radius: 7px;
+    grid-area: consultas;
+    width: 100%;
+
+    font-size: 1rem;
+}
+
+#consultas-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#consultas-container h2 {
+    padding-left: 5%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.22);
+    padding-bottom: 1%;
+}
+
+#tables-consultas {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    background-color: white;
+    overflow-y: visible;
+}
+
+#ver-consulta {
+    font-family: 'Roboto', sans-serif;
+    background-color: #498EC9;
+    color: white;
+    border: none;
+    padding: 6% 12%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5%;
+}
+
+#ver-consulta:hover {
+    background-color: #498dc9a4;
+}
+
+#procedimientos-container {
+    border: 1px solid rgba(128, 128, 128, 0.22);    
+    border-radius: 7px;
+    grid-area: procedimientos;
+    width: 100%; 
+        font-size: 1rem;   
+}
+
+#procedimientos-container h2 {
+    padding-left: 5%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.22);
+    padding-bottom: 1%;
+}
+
+#procedimientosInfo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin-left: 3%;
+}
+
 
 
 .options-btn {

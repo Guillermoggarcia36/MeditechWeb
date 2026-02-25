@@ -14,10 +14,40 @@ routes.get('/', (req, res) => {
 routes.get('/resumen', (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
-        conn.query('SELECT historial_clinico.codigo_historial, historial_clinico.id_pacienteFK, historial_clinico.fecha_nacimiento, historial_clinico.sexo, historial_clinico.grupo_sanguineo, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido FROM historial_clinico INNER JOIN usuarios AS usuarios_paciente ON historial_clinico.id_pacienteFK = usuarios_paciente.id_usuario', (err, rows) => {
+        conn.query('SELECT historial_clinico.id_historial, historial_clinico.codigo_historial, historial_clinico.id_pacienteFK, historial_clinico.fecha_nacimiento, historial_clinico.sexo, historial_clinico.grupo_sanguineo, historial_clinico.antecedentes_personales, historial_clinico.antecedentes_familiares, historial_clinico.estado_clinico, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido FROM historial_clinico INNER JOIN usuarios AS usuarios_paciente ON historial_clinico.id_pacienteFK = usuarios_paciente.id_usuario', (err, rows) => {
             if (err) return res.status(500).json(err);
             res.json(rows);
         });
+    });
+});
+
+routes.get("/consultas", (req, res) => {
+  const { id_historialFK } = req.query;
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+    conn.query(
+      "SELECT * FROM consultas WHERE id_historialFK = ?",
+      [id_historialFK],
+      (err, rows) => {
+        if (err) return res.send(err);
+        res.json(rows);
+      },
+    );
+  });
+});
+
+routes.get('/procedimientos', (req, res) => {
+    const { id_historialFK } = req.query;
+    req.getConnection((err, conn) => {
+        if (err) return res.send(err);
+        conn.query(
+          "SELECT procedimientos_quirurgicos FROM historial_clinico WHERE id_historial = ?",
+          [id_historialFK],
+          (err, rows) => {
+            if (err) return res.send(err);
+            res.json(rows);
+          },
+        );
     });
 });
 
@@ -51,5 +81,20 @@ routes.post('/', (req, res) => {
     });
 });
 
+routes.put('/', (req, res) => {
+    const { estado_clinico, id_historial } = req.body;
+
+    req.getConnection((err, conn) => {
+        if (err) return res.status(500).json(err);
+        conn.query(
+            "UPDATE historial_clinico SET estado_clinico = ? WHERE id_historial = ?",
+            [estado_clinico, id_historial],
+            (err) => {
+                if (err) return res.status(500).json(err);
+                res.json({ message: "Estado clínico actualizado correctamente" });
+            }
+        );
+    });
+});
 
 module.exports = routes;

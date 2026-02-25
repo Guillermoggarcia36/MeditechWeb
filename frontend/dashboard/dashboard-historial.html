@@ -54,6 +54,14 @@
                 <p>Historial medico</p>
                 <img src="../assets/icons/historialMedico.png">
             </button>
+            <button id="inventario-btn">
+                <p>Inventario</p>
+                <img src="../assets/icons/inventario2.png">
+            </button>
+            <button id="autorizaciones-btn">
+                <p>Autorizaciones</p>
+                <img src="../assets/icons/autorizacion.png">
+            </button>
         </div>
 
         <section id="content-area">
@@ -75,14 +83,32 @@
 
                 <div id="consultas-container">
                     <h2>Consultas medicas</h2>
-                    <div id="consultasInformation-container">
-
+                    <div id="consultasInfo-container">
+                        <table id="tables-consultas">
+                            <thead>
+                                <tr id="tables-columns">
+                                    <th></th>
+                                    <th id="fecha-consulta">Fecha</th>
+                                    <th id="hora-consulta">Hora</th>
+                                    <th id="motivo-consulta">Motivo</th>
+                                    <th id="diagnostico-consulta">Diagnostico</th>
+                                    <th id="acciones-consulta">Accion</th>                        
+                                </tr>
+                            </thead>
+                            <tbody id="consultas-body">
+                                <!-- Las filas se generarán dinámicamente aquí -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div id="procedimientos-container">
                     <h2>Procedimientos quirurgicos</h2>
-                    <div id="procedimientosInformation-container">
-
+                    <div id="procedimientosInfo-container">
+                        <table id="tables-procedimientos">
+                            <tbody id="procedimientos-body">
+                                <!-- Las filas se generarán dinámicamente aquí -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -96,6 +122,16 @@
                         <img src="../assets/icons/mas.png"" alt="Agregar nueva receta">
                         <p>Agregar receta</p>
                     </button>
+                    <div id="estado-container">
+                        <h4>Estado clinico</h4>
+                        <select id="estadoClinico" name="estadoClinico">
+                            <option value="" disabled selected hidden>Seleccione estado clinico</option>
+                            <option value="En seguimiento">En seguimiento</option>
+                            <option value="En tratamiento">En tratamiento</option>
+                            <option value="Estable">Estable</option>
+                            <option value="Dado de alta">Dado de alta</option>
+                        </select>
+                    </div>
                 </div>
             </section>    
 

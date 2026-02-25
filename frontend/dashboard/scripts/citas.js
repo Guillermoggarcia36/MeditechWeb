@@ -316,10 +316,9 @@ async function verificarEstadoCitas() {
     let citasActualizadas = false;
     
     for (const cita of citas) {
-      const fechaCita = cita.fecha;
-      const horaCita = cita.hora;
+      const fechaCita = cita.fecha.trim().split('T')[0];
+      const horaCita = cita.hora.trim();
       
-      // Crear Date combinando fecha y hora para comparación exacta
       const fechaHoraCita = new Date(fechaCita + 'T' + horaCita);
       const citaPasada = ahora > fechaHoraCita;
       
@@ -345,7 +344,6 @@ async function verificarEstadoCitas() {
     
     if (citasActualizadas) {
       console.log("Refrescando lista de citas...");
-      // Obtener las citas actualizadas sin volver a verificar
       const response = await fetch("http://localhost:9000/citas");
       if (response.ok) {
         citasCompletas = await response.json();

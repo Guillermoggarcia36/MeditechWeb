@@ -9,7 +9,7 @@ if (!JWT_SECRET) {
     throw new Error("JWT_SECRET no está definido. Verifica tu archivo .env");
 };
 
-// ✅ Almacenar últimas actividades de usuarios (id_usuario -> timestamp)
+// Almacenar últimas actividades de usuarios (id_usuario -> timestamp)
 const userActivity = new Map();
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
 
@@ -37,7 +37,7 @@ const login = (req, res) => {
             // Genera token JWT
             const token = jwt.sign({ id_usuario: user.id_usuario, id_rolFK: user.id_rolFK }, JWT_SECRET, { expiresIn: "4h" });
 
-            // ✅ Registrar actividad inicial del usuario
+            // Registrar actividad inicial del usuario
             userActivity.set(user.id_usuario, Date.now());
 
             res.json({
@@ -58,7 +58,7 @@ const login = (req, res) => {
 function verificarToken(req, res, next) {
     const authHeader = req.headers.authorization;
     
-    // ❌ CASO 1: No hay header de autorización
+    // CASO 1: No hay header de autorización
     if (!authHeader) {
         return res.status(401).json({ 
             message: 'No se proporcionó token',
@@ -67,7 +67,7 @@ function verificarToken(req, res, next) {
         });
     }
 
-    // ❌ CASO 2: Header malformado (no es Bearer token)
+    // CASO 2: Header malformado (no es Bearer token)
     const parts = authHeader.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
         return res.status(401).json({ 
@@ -79,7 +79,7 @@ function verificarToken(req, res, next) {
 
     const token = parts[1];
     
-    // ❌ CASO 3: Token vacío
+    // CASO 3: Token vacío
     if (!token) {
         return res.status(401).json({ 
             message: 'Token vacío',
@@ -104,7 +104,7 @@ function verificarToken(req, res, next) {
             });
         }
         
-        // ✅ Actualizar última actividad
+        // Actualizar última actividad
         userActivity.set(decoded.id_usuario, ahora);
         
         req.usuario = decoded; 

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-//Funcion ingreso usuario / login
+// Funcion ingreso usuario login
 async function iniciarSesion() {
     const id_usuario = document.getElementById("id-usuario").value;
     const clave = document.getElementById("contraseña").value;
@@ -52,7 +52,7 @@ async function iniciarSesion() {
             console.log(data.usuario.nombres, data.usuario.apellidos);
             localStorage.setItem("nameUser", data.usuario.nombres);
             localStorage.setItem("apellidoUser", data.usuario.apellidos);
-            localStorage.setItem("token", data.token);
+            localStorage.setItem("token", data.token);  
             localStorage.setItem("idUsuario", data.usuario.id_usuario);
             Swal.fire({
                 title: 'Inicio de sesión exitoso',
@@ -175,41 +175,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
-
-// Almacenar token
-localStorage.setItem("token", data.token);
-
-document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("⚠️ No tienes sesión activa. Por favor inicia sesión.");
-    window.location.href = "../index.html"; // redirige al login
-    return;
-  }
-
-  // Si hay token, puedes verificarlo con el backend
-  fetch("http://localhost:9000/users/verifyToken", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.valid) {
-      console.log("✅ Token válido, acceso permitido");
-    } else {
-      alert("⛔ Sesión expirada. Inicia sesión nuevamente.");
-      localStorage.removeItem("token");
-      window.location.href = "../index.html";
-    }
-  })
-  .catch(err => {
-    console.error("Error verificando token:", err);
-    alert("Error de conexión al servidor.");
-    window.location.href = "../login.html"
-  });
 });
