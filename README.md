@@ -15,9 +15,6 @@ Organiza y gestiona las consultas entre pacientes y profesionales de la salud. D
 <img width="1442" height="790" alt="image" src="https://github.com/user-attachments/assets/5d98ac77-83df-40c9-a666-0a28d41998a6" />
 Almacena la información médica de los pacientes. En él se registran los diagnósticos, observaciones y tratamientos indicados por los profesionales de la salud durante las consultas. De esta manera se puede llevar un seguimiento ordenado del estado de salud de cada paciente.
 
-<h2>Inventario</h2>
-
-
 ### Disclaimer
 
 Este proyecto ha sido desarrollado únicamente con **fines educativos y académicos**.
