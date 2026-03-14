@@ -1,4 +1,4 @@
-*Meditech Web*
+<b>*Meditech Web*</b>
 Es un sistema de gestión medica desarrollado como aplicación web, diseñado para optimizar la administracion de procesos clínicos en una institución de salud.
 El sistema permite centralizar y organizar la información relacionada con citas medicas, historial clinico, gestion de usuarios, etc. facilitando el control y seguimiento de la gestion medica.
 
