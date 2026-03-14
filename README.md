@@ -16,3 +16,12 @@ Organiza y gestiona las consultas entre pacientes y profesionales de la salud. D
 Almacena la información médica de los pacientes. En él se registran los diagnósticos, observaciones y tratamientos indicados por los profesionales de la salud durante las consultas. De esta manera se puede llevar un seguimiento ordenado del estado de salud de cada paciente.
 
 <h2>Inventario</h2>
+
+
+### Disclaimer
+
+Este proyecto ha sido desarrollado únicamente con **fines educativos y académicos**.
+
+Algunos nombres de empresas, marcas, logotipos o referencias utilizadas en este proyecto pueden pertenecer a sus respectivos propietarios. Dichos elementos se incluyen únicamente con fines demostrativos o ilustrativos dentro del contexto del desarrollo del sistema.
+
+Este proyecto no tiene afiliación, patrocinio ni relación oficial con ninguna de las empresas o marcas mencionadas. Todos los derechos sobre dichas marcas y logotipos pertenecen a sus respectivos dueños.
