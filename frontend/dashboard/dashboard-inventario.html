@@ -68,8 +68,118 @@
             <h1> Pagina en construccion . . . .</h1>
             <img src="../assets/icons/construccion.png">
         </div>
+
+        <section id="content-area">
+                <div id="title-content">
+                    <h1>Inventario</h1>
+                </div>
+            <div id="inventario-container">
+                <div class="content-container">
+                    <div id="filtros-items">
+                        <button id="medicamentoBtn">Medicamento</button>
+                        <button id="insumosBtn">Insumo</button>
+                    </div>
+                    <div id="search-inventario">
+                        <input type="text" id="searchInput-inventario" name="busqueda" placeholder="Buscar medicamento o insumo">
+                        <button id="nuevo-itemBtn">
+                            <img src="../assets/icons/mas.png" alt="Agregar nuevo item">
+                            <p>Nuevo item</p>
+                        </button>                        
+                    </div>
+
+                    <table id="tables">
+                        <thead>
+                            <tr id="tables-columns">
+                                <th id="id-item">ID</th>
+                                <th id="stock-item">Stock</th>
+                                <th id="nombre-item">Nombre</th>
+                                <th id="categoria">Categoria</th>
+                                <th id="descripcion-item">Descripcion</th>
+                                <th id="vencimiento">Vence</th>
+                                <th id="acciones">Acciones</th>                        
+                            </tr>
+                        </thead>
+                        <tbody id="inventario-body">
+                            <!-- Las filas de inventario se generarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <div id="paging">
+                        <div id="previous-btn">
+                            <button>
+                                <img src="../assets/slider/leftArrow.png">
+                            </button>
+                        </div>
+                        <div id="pages">
+                            
+                        </div>
+                        <div id="next-page">
+                            <button>
+                                <img src="../assets/slider/rightArrow.png">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 </header>
+
+<body>
+    <div id="overlay">
+        <div id="additem-container">
+            <div id="additem-title">
+                <h2>Inventario / Agregar item</h2>
+            </div>
+            <form id="additem-form" class="addForms">           
+                <label for="tipoItem">Tipo item</label>
+                <select id="tipoItem" name="tipo_item">
+                    <option value="" disabled selected hidden>Seleccione tipo de item</option>
+                    <option value="medicamento">Medicamento</option>
+                    <option value="insumo">Insumo</option>              
+                </select>
+
+                <label for="idItem">ID Item</label>
+                <input type="number" id="idItem" name="id_item" placeholder="Ingrese el ID del item">
+
+                <label for="nombreItem">Nombre</label>
+                <input type="text" id="nombreItem" name="nombre_item" placeholder="Ingrese el nombre del item" list="listaItems">
+                <datalist id="listaItems"></datalist>
+
+                <label for="stockItem">Stock</label>
+                <input type="number" id="stockItem" name="stock_item" placeholder="Ingrese el stock del item">
+
+                <label for="categoriaItem">Categoria</label>
+                <select id="categoriaItem" name="categoria_item">
+                    <option value="" disabled selected hidden>Seleccione categoria del item</option>
+                    <option value="analgesico">Analgesico</option>
+                    <option value="antibiotico">Antibiotico</option>
+                    <option value="antipiretico">Antipiretico</option>
+                    <option value="antiseptico">Antiseptico</option>
+                    <option value="desinfectante">Desinfectante</option>
+                    <option value="material-quirurgico">Material quirurgico</option>
+                    <option value="material-consumo">Material de consumo</option>
+                </select>
+
+                <label for="descripcionItem">Descripcion</label>
+                <textarea id="descripcionItem" name="descripcion_item" placeholder="Ingrese una descripcion del item"></textarea>
+
+                <label for="fechaVencimiento">Fecha de vencimiento</label>
+                <input type="date" id="fechaVencimiento" name="fecha_vencimiento">
+
+                <label for="estadoItem">Estado</label>
+                <select id="estadoItem" name="estado_item">
+                    <option value="" disabled selected hidden>Seleccione estado del item</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+            <div id="buttons">
+                <button type="submit" id="submit">Guardar</button>
+                <button type="button" id="cancel" class="cancelBtn">Cerrar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</body>
 
 <script src="scripts/protectRoute.js"></script>
 <script src="scripts/global.js"></script>

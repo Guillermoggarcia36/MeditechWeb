@@ -4,20 +4,13 @@ const routes = express.Router();
 routes.get('/', (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
-        conn.query('SELECT * FROM historial_clinico', (err, rows) => {
-            if (err) return res.send
+        conn.query(
+          "SELECT historial_clinico.id_historial, historial_clinico.codigo_historial, historial_clinico.id_pacienteFK, historial_clinico.fecha_registro, historial_clinico.fecha_nacimiento, historial_clinico.sexo, historial_clinico.grupo_sanguineo, historial_clinico.antecedentes_familiares, historial_clinico.antecedentes_personales, historial_clinico.procedimientos_quirurgicos, historial_clinico.estado_clinico, historial_clinico.descripcion_general, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido FROM historial_clinico INNER JOIN usuarios AS usuarios_paciente ON historial_clinico.id_pacienteFK = usuarios_paciente.id_usuario;",
+          (err, rows) => {
+            if (err) return res.send(err);
             res.json(rows);
-        });
-    });
-});
-
-routes.get('/resumen', (req, res) => {
-    req.getConnection((err, conn) => {
-        if (err) return res.send(err);
-        conn.query('SELECT historial_clinico.id_historial, historial_clinico.codigo_historial, historial_clinico.id_pacienteFK, historial_clinico.fecha_nacimiento, historial_clinico.sexo, historial_clinico.grupo_sanguineo, historial_clinico.antecedentes_personales, historial_clinico.antecedentes_familiares, historial_clinico.estado_clinico, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido FROM historial_clinico INNER JOIN usuarios AS usuarios_paciente ON historial_clinico.id_pacienteFK = usuarios_paciente.id_usuario', (err, rows) => {
-            if (err) return res.status(500).json(err);
-            res.json(rows);
-        });
+          },
+        );
     });
 });
 
@@ -52,12 +45,12 @@ routes.get('/procedimientos', (req, res) => {
 });
 
 routes.post('/', (req, res) => {
-    const { id_pacienteFK, fecha_registro, peso_paciente, altura_paciente, grupo_sanguineo, antecedentes_personales, antecedentes_familiares, procedimientos_quirurgicos, descripcion_general, estado_clinico } = req.body;
+    const { id_pacienteFK, fecha_registro, peso_paciente, altura_paciente, fecha_nacimiento, sexo, grupo_sanguineo, antecedentes_personales, antecedentes_familiares, procedimientos_quirurgicos, descripcion_general, estado_clinico } = req.body;
 
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json(err);
 
-        const historialData = { id_pacienteFK, fecha_registro, peso_paciente, altura_paciente, grupo_sanguineo, antecedentes_personales, antecedentes_familiares, procedimientos_quirurgicos, descripcion_general, estado_clinico };
+        const historialData = { id_pacienteFK, fecha_registro, peso_paciente, altura_paciente, fecha_nacimiento, sexo, grupo_sanguineo, antecedentes_personales, antecedentes_familiares, procedimientos_quirurgicos, descripcion_general, estado_clinico };
 
         conn.query("INSERT INTO historial_clinico SET ?", historialData, (err, result) => {
             if (err) return res.status(500).json(err);

@@ -47,7 +47,7 @@ function cargarUsuarios() {
   arreglo.forEach((usuario) => {
     const fila = document.createElement("tr");
     fila.innerHTML = `
-      <td>${usuario.id_usuario}</td>
+      <td class="td-idUsuario">${usuario.id_usuario}</td>
       <td>${usuario.nombres}</td>
       <td>${usuario.apellidos}</td>
       <td>${roles[usuario.id_rolFK] || "Desconocido"}</td>

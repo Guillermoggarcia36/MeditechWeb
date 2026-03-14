@@ -6,6 +6,9 @@ const myconn = require('express-myconnection');
 const userRoutes = require('./routes/users');
 const citasRoutes = require('./routes/citas')
 const historialRoutes = require('./routes/historial');
+const inventarioRoutes = require('./routes/inventario');
+const consultaRoutes = require('./routes/consultas');
+const autorizacionesRoutes = require('./routes/autorizaciones');
 const cors = require('cors');
 
 const app = express();
@@ -46,6 +49,9 @@ app.get('/', (req, res) => {
 app.use('/users', userRoutes);
 app.use('/citas', citasRoutes);
 app.use('/historial', historialRoutes);
+app.use('/inventario', inventarioRoutes);
+app.use('/consultas', consultaRoutes);
+app.use('/autorizaciones/', autorizacionesRoutes);
 
 // Servidor corriendo
 app.listen(app.get('port'), () => {

@@ -63,7 +63,7 @@ async function iniciarSesion() {
                 timerProgressBar: true,
                 allowOutsideClick: false,
                 willOpen: () => {
-                Swal.showLoading();      // opcional, muestra una animación breve
+                Swal.showLoading();      // muestra una animación breve
                 },
             }).then(() => {
                 // redirigir al cerrar el Swal (por timer o manual)

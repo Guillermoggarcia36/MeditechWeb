@@ -219,7 +219,7 @@ function cargarResumenCita() {
 // Elemento boton Next de agendamiento de cita
 const nextBtn = document.getElementById("next-btn");
 const nextBtnText = document.getElementById("next-btnText");
-//Evento para seguir avanzando en el agendamiento de cita y cuando esten completos los datos hacer registro a BD
+// Evento para seguir avanzando en el agendamiento de cita y cuando esten completos los datos hacer registro a BD
 nextBtn.addEventListener("click", () => {
   validacionSeleccion();
   if (
@@ -278,31 +278,35 @@ nextBtn.addEventListener("click", () => {
 });
 
 function validacionSeleccion() {
-  if (datosCita.id_sedeFK && resumenCita.sede) {
-    stepsNotes.textContent = "Selecciona un medico";
-    cuerpoSedes.style.display = "none";
-    citasContainer.style.setProperty("--barra-width", "40%");
-
-    const cuerpoMedicos = document.getElementById("options-medicos");
-    cuerpoMedicos.style.display = "grid";
-    cargarMedicos();
+  if (!datosCita.id_sedeFK || !resumenCita.sede) {
+    return;
   }
-  if (datosCita.id_medicoFK == null && resumenCita.medico == null) {
-    nextBtn.style.opacity= "40%";
+
+  stepsNotes.textContent = "Selecciona un medico";
+  cuerpoSedes.style.display = "none";
+  citasContainer.style.setProperty("--barra-width", "40%");
+
+  const cuerpoMedicos = document.getElementById("options-medicos");
+  cuerpoMedicos.style.display = "grid";
+  cargarMedicos();
+
+  if (!datosCita.id_medicoFK || !resumenCita.medico) 
+    {nextBtn.style.opacity = "40%";
     nextBtn.style.pointerEvents = "none";
+    return;
   }
-  if (datosCita.id_medicoFK && resumenCita.medico) {
-    nextBtn.style.opacity = "100%";
-    nextBtn.style.pointerEvents = "all";
 
-    stepsNotes.textContent = "Selecciona una fecha y hora";
-    cuerpoMedicos.style.display = "none";
-    citasContainer.style.setProperty("--barra-width", "75%");
-    cargarCalendario();
-  }
-  if (datosCita.fecha == null && resumenCita.fecha == null || datosCita.hora == null && resumenCita.hora == null) {
-    nextBtn.style.opacity= "40%";
-    nextBtn.style.pointerEvents = "none"
+  nextBtn.style.opacity = "100%";
+  nextBtn.style.pointerEvents = "all";
+
+  stepsNotes.textContent = "Selecciona una fecha y hora";
+  cuerpoMedicos.style.display = "none";
+  citasContainer.style.setProperty("--barra-width", "75%");
+  cargarCalendario();
+
+  if (!datosCita.fecha || !resumenCita.fecha || !datosCita.hora || !resumenCita.hora) 
+    {nextBtn.style.opacity = "40%";
+    nextBtn.style.pointerEvents = "none";
   }
 }
 
@@ -534,7 +538,6 @@ function renderizarPaginacion() {
 
 // Funcion asincrona para obtener citas registradas desde BD
 async function obtenerCitas() {
-  verificarEstadoCitas();
   paginaActual = 1;
   try {
     const response = await fetch("http://localhost:9000/citas");

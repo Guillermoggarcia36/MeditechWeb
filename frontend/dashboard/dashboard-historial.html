@@ -89,7 +89,6 @@
                                 <tr id="tables-columns">
                                     <th></th>
                                     <th id="fecha-consulta">Fecha</th>
-                                    <th id="hora-consulta">Hora</th>
                                     <th id="motivo-consulta">Motivo</th>
                                     <th id="diagnostico-consulta">Diagnostico</th>
                                     <th id="acciones-consulta">Accion</th>                        
@@ -124,7 +123,7 @@
                     </button>
                     <div id="estado-container">
                         <h4>Estado clinico</h4>
-                        <select id="estadoClinico" name="estadoClinico">
+                        <select id="estadoClinico" name="estado_clinico">
                             <option value="" disabled selected hidden>Seleccione estado clinico</option>
                             <option value="En seguimiento">En seguimiento</option>
                             <option value="En tratamiento">En tratamiento</option>
@@ -178,6 +177,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
         </section>
     </main>
 </header>
@@ -188,19 +188,30 @@
             <div id="addhistorial-title">
                 <h2>Nueva historia clinica</h2>
             </div>
-            <form id="addhistorial-form">
+            <form id="addhistorial-form" class="addForms">
                 <label for="paciente">Paciente</label>
-                <input type="text" id="pacienteBuscador" name="paciente" placeholder="Busque y/o seleccione paciente" list="listaPacientes">
-                <datalist id="listaPacientes"></datalist>
+                <select id="pacienteBuscador" name="id_pacienteFK">
+                    <option value="" disabled selected hidden>Seleccione un paciente</option>
+                </select>
                 
                 <label for="pesoPaciente">Peso Paciente</label>
-                <input type="text" id="pesoPaciente" name="pesoPaciente">               
+                <input type="text" id="pesoPaciente" name="peso_paciente">               
 
                 <label for="alturaPaciente">Altura paciente</label>
-                <input type="text" id="alturaPaciente" name="alturaPaciente">
+                <input type="text" id="alturaPaciente" name="altura_paciente">
+
+                <label form="fechaNacimiento">Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fecha_nacimiento">
+
+                <label for="sexo">Sexo</label>
+                <select id="sexo" name="sexo">
+                    <option value="" disabled selected hidden>Seleccione sexo</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
 
                 <label for="grupoSanguineo">Grupo sanguineo</label>
-                <select id="grupoSanguineo" name="grupoSanguineo">
+                <select id="grupoSanguineo" name="grupo_sanguineo">
                     <option value="" disabled selected hidden>Seleccione grupo sanguineo</option>
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
@@ -213,19 +224,19 @@
                 </select>
 
                 <label for="antecedentesPersonales">Antecedentes personales</label>
-                <textarea id="antecedentesPersonales" name="antecedentesPersonales"></textarea>
+                <textarea id="antecedentesPersonales" name="antecedentes_personales"></textarea>
 
                 <label for="antecedentesFamiliares">Antecedentes familiares</label>
-                <textarea id="antecedentesFamiliares" name="antecedentesFamiliares"></textarea>
+                <textarea id="antecedentesFamiliares" name="antecedentes_familiares"></textarea>
 
                 <label for="descripcionGeneral">Descripcion general</label>
-                <textarea id="descripcionGeneral" name="descripcionGeneral"></textarea>
+                <textarea id="descripcionGeneral" name="descripcion_general"></textarea>
 
                 <label for="procedimientosQuirurgicos">Procedimientos quirurgicos</label>
-                <textarea id="procedimientosQuirurgicos" name="procedimientosQuirurgicos"></textarea>
+                <textarea id="procedimientosQuirurgicos" name="procedimientos_quirurgicos"></textarea>
 
                 <label for="estadoClinico">Estado clinico</label>
-                <select id="estadoClinico" name="estadoClinico">
+                <select id="estadoClinicoSelect" name="estado_clinico">
                     <option value="" disabled selected hidden>Seleccione estado clinico</option>
                     <option value="En seguimiento">En seguimiento</option>
                     <option value="En tratamiento">En tratamiento</option>
@@ -235,7 +246,33 @@
 
             <div id="buttons">
                 <button type="submit" id="submit">Guardar</button>
-                <button type="button" id="cancel">Cerrar</button>
+                <button type="button" id="cancel" class="cancelBtn">Cerrar</button>
+            </div>
+            </form>
+        </div>
+
+        <div id="addconsulta-container">
+            <div id="addconsulta-title">
+                <h2>Nueva consulta</h2>
+            </div>
+            <form id="addconsulta-form" class="addForms">           
+                <label form="fechaConsulta">Fecha de consulta</label>
+                <input type="date" id="fechaConsulta" name="fecha_consulta">
+
+                <label for="motivoConsulta">Motivo de la consulta</label>
+                <textarea id="motivoConsulta" name="motivo_consulta"></textarea>
+
+                <label for="descripcionConsulta">Descripcion</label>
+                <textarea id="descripcionConsulta" name="descripcion_consulta"></textarea>
+
+                <label for="diagnosticoConsulta">Diagnostico</label>
+                <textarea id="diagnosticoConsulta" name="diagnostico"></textarea>
+
+                <label for="observaciones">Observaciones</label>
+                <textarea id="observaciones" name="observaciones"></textarea>
+            <div id="buttons">
+                <button type="submit" id="submit">Guardar</button>
+                <button type="button" id="cancel" class="cancelBtn">Cerrar</button>
             </div>
             </form>
         </div>

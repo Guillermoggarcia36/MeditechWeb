@@ -70,6 +70,49 @@
             <img src="../assets/icons/construccion.png">
         </div>
         
+        <section id="content-area">
+            <div id="title-content">
+                <h1>Autorizaciones</h1>
+            </div>
+            <div id="autorizaciones-container">
+                <!-- Aquí se cargarán las autorizaciones -->
+                <div class="content-container">
+                    <div id="search-autorizacion">
+                        <input type="text" id="searchInput-autorizacion" name="busqueda" placeholder="Buscar autorizacion">                      
+                    </div>
+                    <table id="tables" style="margin-top: 1%;">
+                        <thead>
+                            <tr id="tables-columns">
+                                <th id="id-autorizacion">ID Autorizacion</th>
+                                <th id="paciente">Paciente</th>
+                                <th id="fecha-solicitud">Fecha de Solicitud</th>
+                                <th id="medicamento">Medicamento</th>
+                                <th id="estado">Estado</th>
+                                <th id="acciones">Acciones</th>                        
+                            </tr>
+                        </thead>
+                        <tbody id="autorizaciones-body">
+                            <!-- Las filas de autorizaciones se generarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <div id="paging">
+                        <div id="previous-btn">
+                            <button>
+                                <img src="../assets/slider/leftArrow.png">
+                            </button>
+                        </div>
+                        <div id="pages">
+                            
+                        </div>
+                        <div id="next-page">
+                            <button>
+                                <img src="../assets/slider/rightArrow.png">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 </header>
 
