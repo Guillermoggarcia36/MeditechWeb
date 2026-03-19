@@ -13,7 +13,13 @@ Organiza y gestiona las consultas entre pacientes y profesionales de la salud. D
 
 <h2>Administración de historial clínico</h2>
 <img width="1442" height="790" alt="image" src="https://github.com/user-attachments/assets/5d98ac77-83df-40c9-a666-0a28d41998a6" />
+<img width="1468" height="872" alt="image" src="https://github.com/user-attachments/assets/76d97966-ad74-4e96-aae9-95e793ff2c36" />
 Almacena la información médica de los pacientes. En él se registran los diagnósticos, observaciones y tratamientos indicados por los profesionales de la salud durante las consultas. De esta manera se puede llevar un seguimiento ordenado del estado de salud de cada paciente.
+
+<h2>Inventario</h2>
+<img width="1431" height="838" alt="image" src="https://github.com/user-attachments/assets/30abcdda-c83e-46ea-bd6a-40dde8877e52" />
+<img width="1449" height="839" alt="image" src="https://github.com/user-attachments/assets/eb1978fa-efdb-42ef-9e08-54211bc722c8" />
+Permite administrar los insumos y medicamentos disponibles. Gracias a este módulo se puede conocer qué productos están disponibles, cuántas unidades existen y verificar información importante como su estado o fecha de vencimiento.
 
 ### Disclaimer
 <small>Este proyecto ha sido desarrollado únicamente con **fines educativos y académicos**. Algunos nombres de empresas, marcas, logotipos o referencias utilizadas en este proyecto pueden pertenecer a sus respectivos propietarios. Dichos elementos se incluyen únicamente con fines demostrativos o ilustrativos dentro del contexto del desarrollo del sistema. Este proyecto no tiene afiliación, patrocinio ni relación oficial con ninguna de las empresas o marcas mencionadas. Todos los derechos sobre dichas marcas y logotipos pertenecen a sus respectivos dueños.</small>
