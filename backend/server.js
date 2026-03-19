@@ -51,7 +51,7 @@ app.use('/citas', citasRoutes);
 app.use('/historial', historialRoutes);
 app.use('/inventario', inventarioRoutes);
 app.use('/consultas', consultaRoutes);
-app.use('/autorizaciones/', autorizacionesRoutes);
+app.use('/autorizaciones', autorizacionesRoutes);
 
 // Servidor corriendo
 app.listen(app.get('port'), () => {

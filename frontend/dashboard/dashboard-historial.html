@@ -86,7 +86,7 @@
                     <div id="consultasInfo-container">
                         <table id="tables-consultas">
                             <thead>
-                                <tr id="tables-columns">
+                                <tr id="tables-columns" style="position: sticky; top: 0; background-color: white;">
                                     <th></th>
                                     <th id="fecha-consulta">Fecha</th>
                                     <th id="motivo-consulta">Motivo</th>
@@ -270,6 +270,61 @@
 
                 <label for="observaciones">Observaciones</label>
                 <textarea id="observaciones" name="observaciones"></textarea>
+            <div id="buttons">
+                <button type="submit" id="submit">Guardar</button>
+                <button type="button" id="cancel" class="cancelBtn">Cerrar</button>
+            </div>
+            </form>
+        </div>
+
+        <div id="addreceta-container">
+            <div id="addreceta-title">
+                <h2>Nueva receta</h2>
+            </div>
+            <form id="addreceta-form" class="addForms">           
+
+                <label for="fechaReceta">Fecha receta</label>
+                <input type="date" id="fechaReceta" name="fecha_receta">
+
+                <label for="descripcionReceta">Medicamentos</label>
+                <table id="medicamentos-table">
+                    <thead>
+                        <tr>
+                            <th>Medicamento</th>
+                            <th>Cantidad</th>
+                            <th>Notas</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                        <tbody id="medicamentos-body">
+                            <tr class="fila-medicamento-nueva">
+                                <td>
+                                    <select class="medicamentoBuscador" name="medicamento_id">
+                                        <option value="" disabled selected hidden>Seleccione un medicamento</option>
+                                    </select>
+                                </td>
+                                <td style="text-align: center;">
+                                    <input class="medicamentoCantidad" type="number" name="medicamento_cantidad" min="1">
+                                </td>
+                                <td>
+                                    <textarea class="medicamentoNotas" placeholder="Notas adicionales"></textarea>
+                                </td>
+                                <td>
+                                    <button type="button" class="deleteMedicamento-btn">
+                                        <img src="../assets/icons/borrar.png" alt="Eliminar medicamento">
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">
+                                    <button type="button" id="agregarMedicamento"> + Agregar medicamento</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                </table>
+
+                <label for="notaReceta">Notas adicionales</label>
+                <textarea id="notaReceta" name="nota_receta"></textarea>
             <div id="buttons">
                 <button type="submit" id="submit">Guardar</button>
                 <button type="button" id="cancel" class="cancelBtn">Cerrar</button>

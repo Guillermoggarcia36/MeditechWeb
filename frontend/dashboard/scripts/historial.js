@@ -3,10 +3,13 @@ API_HISTORIAL = "http://localhost:9000/historial";
 API_PACIENTES = "http://localhost:9000/users";
 API_CONSULTAS = "http://localhost:9000/consultas";
 API_PROCEDIMIENTOS = "http://localhost:9000/historial/procedimientos";
+API_MEDICAMENTOS = "http://localhost:9000/inventario/medicamentos";
+API_AUTORIZACIONES = "http://localhost:9000/autorizaciones";
 
 const overlay = document.getElementById("overlay");
 const addHistorialContainer = document.getElementById("addhistorial-container");
 const addConsultaContainer = document.getElementById("addconsulta-container");
+const addRecetaContainer = document.getElementById("addreceta-container");
 const cancelBtnForms = document.querySelectorAll(".cancelBtn");
 const addForms = document.querySelectorAll(".addForms");
 
@@ -15,6 +18,7 @@ function openFormHistorial() {
   addHistorialContainer.style.display = "flex";
 
   addConsultaContainer.style.display = "none"; // Asegura que el formulario de consulta esté oculto
+  addRecetaContainer.style.display = "none"; // Asegura que el formulario de receta esté oculto
 }
 
 function closeForm() {
@@ -24,12 +28,23 @@ function closeForm() {
 
   addConsultaContainer.style.display = "none";
   addConsultaContainer.querySelector("form").reset();
+
+  addRecetaContainer.style.display = "none";
+  addRecetaContainer.querySelector("form").reset();
 }
 
 function openFormConsulta() {
   overlay.classList.add("active");
   addConsultaContainer.style.display = "flex";
   addHistorialContainer.style.display = "none"; // Asegura que el formulario de historial esté oculto   
+}
+
+function openFormReceta() {
+  overlay.classList.add("active");
+  addRecetaContainer.style.display = "flex";
+  addHistorialContainer.style.display = "none"; // Asegura que el formulario de historial esté oculto
+  addConsultaContainer.style.display = "none"; // Asegura que el formulario de consulta esté oculto
+  cargarMedicamentos(); // Carga los medicamentos al abrir el formulario de receta
 }
 
 const nuevoRegistroHistorial = document.getElementById("nuevo-registroBtn");
@@ -47,6 +62,9 @@ cancelBtnForms.forEach((btn) => {
 
 const nuevoRegistroConsulta = document.getElementById("consultaBtn");
 nuevoRegistroConsulta.addEventListener("click", openFormConsulta);
+
+const nuevoRegistroReceta = document.getElementById("recetaBtn");
+nuevoRegistroReceta.addEventListener("click", openFormReceta);
 
 const buscadorPaciente = document.getElementById("pacienteBuscador");
 
@@ -69,6 +87,53 @@ async function cargarPacientes() {
   } catch (error) {
     console.error("Error cargando pacientes:", error);
 }}
+
+let medicamentosData = [];
+
+async function cargarMedicamentos() {
+    try {
+        const response = await fetch(API_MEDICAMENTOS);
+        medicamentosData = await response.json();
+        llenarSelectMedicamento(document.querySelector(".medicamentoBuscador"));
+    } catch (error) {
+        console.error("Error cargando medicamentos:", error);
+    }
+}
+
+function llenarSelectMedicamento(select) {
+    select.innerHTML = '<option value="" disabled selected hidden>Seleccione un medicamento</option>';
+    medicamentosData.forEach((medicamento) => {
+        const option = document.createElement("option");
+        option.value = medicamento.id_medicamento;
+        option.textContent = medicamento.nombre_medicamento;
+        select.appendChild(option);
+    });
+}
+
+function crearFilaMedicamento() {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+        <td>
+            <select class="medicamentoBuscador" name="medicamento_id">
+                <option value="" disabled selected hidden>Seleccione un medicamento</option>
+            </select>
+        </td>
+        <td style="text-align: center;">
+            <input class="medicamentoCantidad" type="number" name="medicamento_cantidad" min="1">
+        </td>
+        <td>
+            <textarea class="medicamentoNotas" placeholder="Notas adicionales"></textarea>
+        </td>
+        <td>
+            <button type="button" class="deleteMedicamento-btn">
+                <img src="../assets/icons/borrar.png" alt="Eliminar medicamento">
+            </button>
+        </td>
+    `;
+    llenarSelectMedicamento(tr.querySelector(".medicamentoBuscador"));
+    tr.classList.add("fila-medicamento-nueva");
+    return tr;
+}
 
 const expresiones = {
   id_pacienteFK: /^\d{1,12}$/, // 6 a 12 digitos.
@@ -354,6 +419,12 @@ consultaForm.addEventListener("submit", (e) => {
     }
 });
 
+const recetaForm = document.getElementById("addreceta-form");
+recetaForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    cargarReceta();
+});
+
 function ocultarContenedor() {
   const historialContainer = document.getElementById("historial-container");
   historialContainer.style.display = "none";
@@ -435,6 +506,58 @@ async function creationHistorial() {
             icon: "error",
             title: "Error",
             text: "No se pudo crear el registro"
+        });
+    }
+}
+
+async function cargarReceta() {
+    const id_historialFK = id_historialFK_actual;
+    // Aquí puedes implementar la lógica para cargar la receta asociada al historial
+    const newAutorizacion = {
+        id_historialFK: id_historialFK,
+        estado_autorizacion: "Pendiente",
+        fecha_autorizacion: document.getElementById("fechaReceta").value,
+        nota: document.getElementById("notaReceta").value,
+        medicamentos: [] // Este campo se llenará con los medicamentos seleccionados
+    }
+
+    const filasMedicamentos = document.querySelectorAll("#medicamentos-body .fila-medicamento-nueva");
+    const medicamentos = Array.from(filasMedicamentos).map(fila => ({
+        id_medicamentoFK: fila.querySelector(".medicamentoBuscador").value,
+        cantidad: fila.querySelector(".medicamentoCantidad").value,
+        notas: fila.querySelector(".medicamentoNotas").value
+    }));
+    medicamentos.forEach(medicamento => {
+        newAutorizacion.medicamentos.push(medicamento);
+    });
+
+    console.log("Datos de autorizacion enviados al servidor:", newAutorizacion);
+    try {
+        const response = await fetch(API_AUTORIZACIONES, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newAutorizacion),
+        });
+        if (response.ok) {
+            Swal.fire({
+                icon: "success",
+                title: "Receta registrada",
+                text: "La receta se ha registrado correctamente",
+                timer: 2000,
+                showConfirmButton: false
+            });
+            closeForm(); // Cierra el formulario después de guardar
+        } else {
+            throw new Error(`Error HTTP ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Error al crear receta:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No se pudo registrar la receta"
         });
     }
 }
@@ -686,6 +809,11 @@ function abrirInformacionGeneral(historial) {
     const estadoClinicoSelect = document.getElementById("estadoClinico");
     estadoClinicoSelect.value = historial.estado_clinico || ""; // Establece el valor del select al estado clínico actual
 
+    const pacienteReceta = document.getElementById("pacienteReceta");
+    if (pacienteReceta) {
+        pacienteReceta.value = `${historial.paciente_nombre} ${historial.paciente_apellido}`;
+    }
+
     console.log("ID Historial del paciente:", id_historialFK_actual);
 
     generalInfo.style.display = "grid";
@@ -766,4 +894,20 @@ if (estadoClinicoSelect) {
 backBtn.addEventListener("click", () => {
     cerrarInformacionGeneral();
     cargarHistorial();
+});
+
+document.getElementById("medicamentos-body").addEventListener("click", (e) => {
+    const btn = e.target.closest(".deleteMedicamento-btn");
+    if (!btn) return;
+    const filas = document.querySelectorAll("#medicamentos-body tr");
+    if (filas.length <= 2) return; // conservar al menos 1 fila de datos
+    btn.closest("tr").remove();
+});
+
+const agregarMedicamentoBtn = document.getElementById("agregarMedicamento");
+agregarMedicamentoBtn.addEventListener("click", () => {
+    const tbody = document.getElementById("medicamentos-body");
+    const ultimaFila = tbody.lastElementChild;
+    const nuevaFila = crearFilaMedicamento();
+    tbody.insertBefore(nuevaFila, ultimaFila);
 });

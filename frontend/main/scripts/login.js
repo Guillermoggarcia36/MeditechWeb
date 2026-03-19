@@ -26,6 +26,10 @@ async function iniciarSesion() {
         Swal.fire('Error', 'ID y contraseña son requeridos', 'error');
         return;
     }
+    if (id_usuario == "" || clave == "") {
+        Swal.fire('Error', 'ID y contraseña no pueden estar vacíos', 'error');
+        return;
+    }
 
     try {
         const res = await fetch(LOGIN_URL, {
@@ -173,6 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.value.length > this.maxLength) {
                 this.value = this.value.slice(0, this.maxLength);
             }
-        });
+        }); 
     }
 });

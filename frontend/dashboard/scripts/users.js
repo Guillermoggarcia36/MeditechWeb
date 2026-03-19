@@ -267,7 +267,7 @@ tbody.addEventListener("click", (e) => {
     // Boton cerrar ventana
     closeAddUser.addEventListener("click", () => {
       iduserForm.readOnly = false;
-      iduserForm.style.cursor = "all";
+      iduserForm.style.cursor = "initial";
       iduserForm.style.backgroundColor = "#FFFFFF";
       iduserForm.disabled = false;
     });

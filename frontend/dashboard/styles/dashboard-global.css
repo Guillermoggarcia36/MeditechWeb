@@ -6,6 +6,10 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+textarea {
+    resize: vertical;
+}
+
 /* ==================== LOADER / PANTALLA DE CARGA ==================== */
 #loader-container {
     position: fixed;
@@ -19,6 +23,7 @@
     align-items: center;
     z-index: 9999;
     transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    cursor: progress;
 }
 
 #loader-container.loader-active {
@@ -1053,7 +1058,7 @@ div {
 #addhistorial-form textarea {
     margin-top: 5%;
     margin-bottom: 5%;
-    height: 50vh;
+    height: 20vh;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     padding: 5%;
@@ -1082,7 +1087,7 @@ div {
     display: grid;
     grid-template-areas: 
         "generalInfo acciones"
-        "consultas acciones"
+        "consultas ."
         "procedimientos .";
     gap: 10px;
 }
@@ -1159,7 +1164,12 @@ div {
     border: 1px solid rgba(128, 128, 128, 0.22);    
     border-radius: 7px;
     grid-area: consultas;
-    width: 100%;    
+    overflow: hidden;
+    overflow-y: visible;
+}
+
+#consultas-body {
+    overflow: hidden;
 }
 
 #procedimientos-container {
@@ -1174,8 +1184,10 @@ div {
     border-radius: 7px;
     grid-area: acciones;
     display: grid;
-    align-items: center;
+    align-items: start;
     justify-content: center;
+    width: 70%;
+    margin-left: 15%;
 }
 
 #acciones-container img {
@@ -1240,7 +1252,6 @@ div {
     border-radius: 7px;
     grid-area: consultas;
     width: 100%;
-
     font-size: 1rem;
 }
 
@@ -1258,11 +1269,10 @@ div {
 #tables-consultas {
     justify-content: center;
     align-items: center;
-    width: 100%;
     font-family: 'Segoe UI', sans-serif;
     text-align: center;
     background-color: white;
-    overflow-y: visible;
+    height: 2vh;
 }
 
 .ver-consulta {
@@ -1408,23 +1418,6 @@ div {
     animation: fadeIn 0.65s;
 }
 
-#addconsulta-container {
-    display: none;
-    flex-direction: column;
-    margin-left: 30%;
-    margin-right: 45%;
-    font-family: 'Roboto', sans-serif;
-    background-color: white;
-    border-radius: 5px;
-    position: fixed;
-    top: 1vh;
-    width: 50%;
-    height: 96%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    animation: fadeIn 0.65s;
-}
-
 #addconsulta-title {
     position: sticky;
     top: 0;
@@ -1465,7 +1458,7 @@ div {
 #addconsulta-form textarea {
     margin-top: 5%;
     margin-bottom: 5%;
-    height: 50vh;
+    height: 20vh;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     padding: 5%;
@@ -1493,6 +1486,161 @@ div {
     border-top: none;
     border-right: none;
     border-left: none;
+}
+
+#addreceta-container {
+    display: none;
+    flex-direction: column;
+    margin-left: 30%;
+    margin-right: 45%;
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+    border-radius: 5px;
+    position: fixed;
+    top: 1vh;
+    width: 50%;
+    height: 96%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    animation: fadeIn 0.65s;
+}
+
+#addreceta-title {
+    position: sticky;
+    top: 0;
+    font-size: 1rem;
+    background-color: #498EC9;
+    color: white;
+    margin: 0;
+    padding: 1px;
+    padding-bottom: 1;
+    grid-area: title;
+}
+
+#addreceta-title h2 {
+    margin-left: 3%;
+}
+
+#addreceta-form {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 1.2rem;
+    font-weight: 600;
+    grid-area: form;
+}
+
+#addreceta-form label {
+    color: #498EC9;
+    margin-top: 5%;
+}
+
+#addreceta-form p {
+    color: red;
+    font-size: 1rem;
+    display: none;
+}
+
+#addreceta-form textarea {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    height: 20vh;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding: 5%;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.452);
+}
+
+#addreceta-form select {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    margin-right: 69%;
+    text-align: start;
+    border: 1px solid rgba(128, 128, 128, 0.452);
+    padding: 3%;
+}
+
+#addreceta-form input {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    background: none;
+    box-shadow: rgba(128, 128, 128, 0.452) 0px 1px 0px 0px;
+    outline: none;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#medicamentos-table {
+    margin-top: 2%;
+    padding: 3%;
+    text-align: center;
+    border: 1px solid rgba(128, 128, 128, 0.389);
+    border-radius: 5px;
+}
+
+#medicamentos-body {
+    border: 1px solid rgba(128, 128, 128, 0.632);
+    padding: 8px;
+    width: 10%;
+    align-items: center;
+}
+
+#medicamentos-body input {
+    width: 40%;
+    text-align: center;  
+}
+
+#medicamentos-body img {
+    width: 26px;
+    height: 26px;
+    border: none;
+}
+
+#medicamentos-body textarea {
+    width: 80%;
+    height: 0%;
+}
+
+#addMedicamento-btn {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#addMedicamento-btn:hover {
+    opacity: 50%;
+}
+
+#agregarMedicamento {
+    color: #498EC9;
+    border: 1px solid #498EC9;
+    font-size: 1rem;
+    background-color: transparent;
+    font-weight: 500;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+#agregarMedicamento:hover {
+    background-color: #498EC9;
+    color: white;
+}
+
+.deleteMedicamento-btn {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.fila-medicamento-nueva {
+    animation: fadeIn 0.3s ease-out;
 }
 
 #additem-container {
@@ -1570,7 +1718,7 @@ div {
 
 #additem-form select {
     margin-top: 5%;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     margin-right: 69%;
@@ -1580,7 +1728,7 @@ div {
 #additem-form textarea {
     margin-top: 5%;
     margin-bottom: 5%;
-    height: 50vh;
+    height: 20vh;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     padding: 5%;
@@ -1676,6 +1824,12 @@ div {
 
 #adduser-form input[type=number]::-webkit-outer-spin-button,
 #adduser-form input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+    margin: 0;
+}
+
+#addreceta-form input[type=number]::-webkit-outer-spin-button,
+#addreceta-form input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none; 
     margin: 0;
 }
