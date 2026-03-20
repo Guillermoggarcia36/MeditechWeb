@@ -2,6 +2,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+.swal-btn-cancelar {
+    margin-left: 100%;
+}
+
 * {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -1764,6 +1768,20 @@ div {
 
 #searchInput-autorizacion::placeholder {
     opacity: 40%;
+}
+
+.btn-verDetalles {
+    font-family: 'Roboto', sans-serif;
+    background-color: #498EC9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8%;
+    cursor: pointer;
+}
+
+.btn-verDetalles:hover {
+    background-color: #498dc9a4;
 }
 
 .options-btn {
