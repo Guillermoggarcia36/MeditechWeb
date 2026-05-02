@@ -63,4 +63,20 @@ routes.post('/', (req, res) => {
     });
 });
 
+routes.put('/', (req, res) => {
+    const { id_autorizacion, estado_autorizacion } = req.body;
+
+    req.getConnection((err, conn) => {
+        if (err) return res.send(err);
+        conn.query('UPDATE autorizaciones SET estado_autorizacion = ? WHERE id_autorizacion = ?', [estado_autorizacion, id_autorizacion], (err, result) => {
+            if (err) return res.send(err);
+            if (result.affectedRows > 0) {
+                res.json({ message: "Autorización actualizada correctamente" });
+            } else {
+                res.status(404).json({ message: "Autorización no encontrada" });
+            }
+        });
+    });
+});
+
 module.exports = routes;

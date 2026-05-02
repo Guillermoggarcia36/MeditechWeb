@@ -10,6 +10,7 @@ const inventarioRoutes = require('./routes/inventario');
 const consultaRoutes = require('./routes/consultas');
 const autorizacionesRoutes = require('./routes/autorizaciones');
 const cors = require('cors');
+const connection = require('express-myconnection');
 
 const app = express();
 
@@ -20,7 +21,8 @@ const dbOptions = {
   port: 3306,
   user: 'root',
   password: '',
-  database: 'meditechbd'
+  database: 'meditechbd',
+  connectionLimit: 10
 };
 
 // Middleware CORS (solo para desarrollo)
@@ -38,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 // Middleware conexión MySQL y parseo JSON
-app.use(myconn(mysql, dbOptions, 'single'));
+app.use(myconn(mysql, dbOptions, 'pool'));
 app.use(express.json());
 
 // Rutas

@@ -76,8 +76,8 @@
             <div id="inventario-container">
                 <div class="content-container">
                     <div id="filtros-items">
-                        <button id="medicamentoBtn">Medicamento</button>
-                        <button id="insumosBtn">Insumo</button>
+                        <button id="medicamentoBtn">Medicamentos</button>
+                        <button id="insumosBtn">Insumos</button>
                     </div>
                     <div id="search-inventario">
                         <input type="text" id="searchInput-inventario" name="busqueda" placeholder="Buscar medicamento o insumo">
@@ -96,6 +96,7 @@
                                 <th id="categoria">Categoria</th>
                                 <th id="descripcion-item">Descripcion</th>
                                 <th id="vencimiento">Vence</th>
+                                <th id="estado">Estado</th>
                                 <th id="acciones">Acciones</th>                        
                             </tr>
                         </thead>
@@ -131,7 +132,7 @@
                 <h2>Inventario / Agregar item</h2>
             </div>
             <form id="additem-form" class="addForms">           
-                <label for="tipoItem">Tipo item</label>
+                <label for="tipoItemTitle">Tipo item</label>
                 <select id="tipoItem" name="tipo_item">
                     <option value="" disabled selected hidden>Seleccione tipo de item</option>
                     <option value="medicamento">Medicamento</option>
@@ -153,6 +154,7 @@
                     <option value="" disabled selected hidden>Seleccione categoria del item</option>
                     <option value="analgesico">Analgesico</option>
                     <option value="antibiotico">Antibiotico</option>
+                    <option value="antiinflamatorio">Antiinflamatorio</option>
                     <option value="antipiretico">Antipiretico</option>
                     <option value="antiseptico">Antiseptico</option>
                     <option value="desinfectante">Desinfectante</option>
@@ -174,6 +176,7 @@
                 </select>
             <div id="buttons">
                 <button type="submit" id="submit">Guardar</button>
+                <button type="submit" id="save-changes">Guardar cambios</button>
                 <button type="button" id="cancel" class="cancelBtn">Cerrar</button>
             </div>
             </form>

@@ -47,15 +47,15 @@ function cargarUsuarios() {
   arreglo.forEach((usuario) => {
     const fila = document.createElement("tr");
     fila.innerHTML = `
-      <td class="td-idUsuario">${usuario.id_usuario}</td>
-      <td>${usuario.nombres}</td>
-      <td>${usuario.apellidos}</td>
-      <td>${roles[usuario.id_rolFK] || "Desconocido"}</td>
-      <td id="tipodocumentoData">${usuario.tipo_documento}</td>
-      <td id="telefonoData">${usuario.numero_telefono}</td>
-      <td id="correoData">${usuario.correo_electronico}</td>
-      <td>${usuario.estado_usuario}</td>
-      <td>
+      <td class="td-idUsuario" data-label="ID">${usuario.id_usuario}</td>
+      <td data-label="Nombres">${usuario.nombres}</td>
+      <td data-label="Apellidos">${usuario.apellidos}</td>
+      <td data-label="Rol">${roles[usuario.id_rolFK] || "Desconocido"}</td>
+      <td id="tipodocumentoData" data-label="Documento">${usuario.tipo_documento}</td>
+      <td id="telefonoData" data-label="Teléfono">${usuario.numero_telefono}</td>
+      <td id="correoData" data-label="Correo">${usuario.correo_electronico}</td>
+      <td data-label="Estado">${usuario.estado_usuario}</td>
+      <td data-label="Acciones">
         <img class="edit-btn" src="../assets/icons/editar.png" alt="Editar">
         <img class="delete-btn" src="../assets/icons/borrar.png" alt="Eliminar">
       </td>
@@ -275,7 +275,7 @@ tbody.addEventListener("click", (e) => {
 });
 
 
-//Variable de boton "guardar cambios"
+// Variable de boton "guardar cambios"
 const guardarCambios = document.getElementById("save-changes");
 
 //Evento para actualizar información de usuario
@@ -513,7 +513,6 @@ async function verificarId() {
           document.getElementById('idusuario').classList.add('incorrect');
           document.getElementById('idusuario').classList.remove('correct');
           document.getElementById('idusuarioduplicado').style.display = "block";
-          document.getElementById('idusuario').style.backgroundImage = 'url("../../assets/icons/incorrecto.png")';
           document.getElementById('idusuario').style.backgroundRepeat = 'no-repeat';
           document.getElementById('idusuario').style.backgroundPosition = 'right 10px center';
           document.getElementById('idusuario').style.backgroundSize = '20px';
@@ -558,7 +557,6 @@ const validarFormulario = (e) => {
                 document.getElementById('idusuario').classList.add('correct');
                 document.getElementById('erroridusuario').style.display = "none";
                 document.getElementById('idusuarioduplicado').style.display = "none";
-                document.getElementById('idusuario').style.backgroundImage = 'url("../../assets/icons/correcto.png")';
                 document.getElementById('idusuario').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('idusuario').style.backgroundPosition = 'right 10px center';
                 document.getElementById('idusuario').style.backgroundSize = '20px';
@@ -569,7 +567,6 @@ const validarFormulario = (e) => {
                 document.getElementById('idusuario').classList.remove('correct');
                 document.getElementById('idusuarioduplicado').style.display = "none";
                 document.getElementById('erroridusuario').style.display = "block";
-                document.getElementById('idusuario').style.backgroundImage = 'url("../../assets/icons/incorrecto.png")';
                 document.getElementById('idusuario').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('idusuario').style.backgroundPosition = 'right 10px center';
                 document.getElementById('idusuario').style.backgroundSize = '20px';
@@ -582,7 +579,6 @@ const validarFormulario = (e) => {
                 document.getElementById('nombres').classList.remove('incorrect');
                 document.getElementById('nombres').classList.add('correct');
                 document.getElementById('errornombres').style.display = "none";
-                document.getElementById('nombres').style.backgroundImage = 'url("../../assets/icons/correcto.png")';
                 document.getElementById('nombres').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('nombres').style.backgroundPosition = 'right 10px center';
                 document.getElementById('nombres').style.backgroundSize = '20px';
@@ -591,7 +587,6 @@ const validarFormulario = (e) => {
                 document.getElementById('nombres').classList.add('incorrect');
                 document.getElementById('nombres').classList.remove('correct');
                 document.getElementById('errornombres').style.display = "block";
-                document.getElementById('nombres').style.backgroundImage = 'url("../../assets/icons/incorrecto.png")';
                 document.getElementById('nombres').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('nombres').style.backgroundPosition = 'right 10px center';
                 document.getElementById('nombres').style.backgroundSize = '20px';
@@ -604,7 +599,6 @@ const validarFormulario = (e) => {
                 document.getElementById('apellidos').classList.remove('incorrect');
                 document.getElementById('apellidos').classList.add('correct');
                 document.getElementById('errorapellidos').style.display = "none";
-                document.getElementById('apellidos').style.backgroundImage = 'url("../../assets/icons/correcto.png")';
                 document.getElementById('apellidos').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('apellidos').style.backgroundPosition = 'right 10px center';
                 document.getElementById('apellidos').style.backgroundSize = '20px';
@@ -613,7 +607,6 @@ const validarFormulario = (e) => {
                 document.getElementById('apellidos').classList.add('incorrect');
                 document.getElementById('apellidos').classList.remove('correct');
                 document.getElementById('errorapellidos').style.display = "block";
-                document.getElementById('apellidos').style.backgroundImage = 'url("../../assets/icons/incorrecto.png")';
                 document.getElementById('apellidos').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('apellidos').style.backgroundPosition = 'right 10px center';
                 document.getElementById('apellidos').style.backgroundSize = '20px';
@@ -646,7 +639,6 @@ const validarFormulario = (e) => {
                 document.getElementById('telefono').classList.remove('incorrect');
                 document.getElementById('telefono').classList.add('correct');
                 document.getElementById('errortelefono').style.display = "none";
-                document.getElementById('telefono').style.backgroundImage = 'url("../../assets/icons/correcto.png")';
                 document.getElementById('telefono').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('telefono').style.backgroundPosition = 'right 10px center';
                 document.getElementById('telefono').style.backgroundSize = '20px';
@@ -655,7 +647,6 @@ const validarFormulario = (e) => {
                 document.getElementById('telefono').classList.add('incorrect');
                 document.getElementById('telefono').classList.remove('correct');
                 document.getElementById('errortelefono').style.display = "block";
-                document.getElementById('telefono').style.backgroundImage = 'url("../../assets/icons/incorrecto.png")';
                 document.getElementById('telefono').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('telefono').style.backgroundPosition = 'right 10px center';
                 document.getElementById('telefono').style.backgroundSize = '20px';
@@ -668,7 +659,6 @@ const validarFormulario = (e) => {
                 document.getElementById('correo').classList.remove('incorrect');
                 document.getElementById('correo').classList.add('correct');
                 document.getElementById('errorcorreo').style.display = "none";
-                document.getElementById('correo').style.backgroundImage = 'url("../../assets/icons/correcto.png")';
                 document.getElementById('correo').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('correo').style.backgroundPosition = 'right 10px center';
                 document.getElementById('correo').style.backgroundSize = '20px';
@@ -677,7 +667,6 @@ const validarFormulario = (e) => {
                 document.getElementById('correo').classList.add('incorrect');
                 document.getElementById('correo').classList.remove('correct');
                 document.getElementById('errorcorreo').style.display = "block";
-                document.getElementById('correo').style.backgroundImage = 'url("../../assets/icons/incorrecto.png")';
                 document.getElementById('correo').style.backgroundRepeat = 'no-repeat';
                 document.getElementById('correo').style.backgroundPosition = 'right 10px center';
                 document.getElementById('correo').style.backgroundSize = '20px';

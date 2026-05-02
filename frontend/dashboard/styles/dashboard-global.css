@@ -6,8 +6,14 @@
     margin-left: 100%;
 }
 
-* {
+*, *::before, *::after {
+    box-sizing: border-box;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 textarea {
@@ -91,6 +97,9 @@ div {
 .main-container {
     display: grid;
     margin-top: 0.6%;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
     grid-template-columns: auto 0.8fr auto;
     grid-template-areas: 
         "logo date-time user"
@@ -608,6 +617,7 @@ div {
 
 #select-menu {
     display: flex;
+    width: 50%;
     flex-direction: column;
 }
 
@@ -1070,7 +1080,7 @@ div {
     border: 1px solid rgba(128, 128, 128, 0.452);
 }
 
-#ver-detalles {
+.ver-detalles-btn {
     font-family: 'Roboto', sans-serif;
     background-color: #498EC9;
     color: white;
@@ -1080,7 +1090,7 @@ div {
     cursor: pointer;
 }
 
-#ver-detalles:hover {
+.ver-detalles-btn:hover {
     background-color: #498dc9a4;
 }
 
@@ -1913,4 +1923,633 @@ div {
     font-size: 1rem;
     font-weight: 500;
     margin-left: 5%;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .main-container {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "logo user"
+            "logo date-time"
+            "sidebar content-area";
+    }
+
+    .date-time {
+        padding-right: 10%;
+        font-size: 1rem;
+    }
+
+    .user {
+        padding-left: 5%;
+    }
+
+    #sidebar-container button p {
+        font-size: 1.1rem;
+    }
+
+    #tables {
+        font-size: 0.9rem;
+    }
+
+    #tables th, #tables td {
+        padding: 0 5px;
+    }
+
+    #adduser-container {
+        margin-left: 10%;
+        margin-right: 10%;
+        width: 80%;
+        top: 3vh;
+        height: 90%;
+    }
+
+    #adduser-form select {
+        margin-right: 40%;
+    }
+
+    #search label {
+        font-size: 1.2rem;
+        margin-left: 3%;
+    }
+
+    /* Citas container */
+    #citas-container {
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    /* Historial search */
+    #search-historial {
+        width: auto;
+        flex-wrap: wrap;
+    }
+
+    #nuevo-registroBtn {
+        width: auto;
+    }
+
+    /* Historial modals */
+    #addhistorial-container,
+    #addconsulta-container,
+    #addreceta-container {
+        margin-left: 10%;
+        margin-right: 0;
+        width: 80%;
+        top: 3vh;
+        height: 90%;
+    }
+
+    #addhistorial-form select {
+        margin-right: 40%;
+    }
+
+    /* Inventario */
+    #additem-container {
+        margin-left: 10%;
+        margin-right: 0;
+        width: 80%;
+        top: 3vh;
+        height: 90%;
+    }
+
+    #filtros-items {
+        gap: 30px;
+        margin-left: 5%;
+    }
+
+    #filtros-items button {
+        width: auto;
+        font-size: 1rem;
+    }
+
+    #search-inventario {
+        width: 90%;
+    }
+
+    #searchInput-inventario {
+        width: 50%;
+    }
+
+    /* Citas */
+    #buttons-schedule button {
+        width: 18%;
+    }
+
+    /* Resumen historial */
+    #resumen-historial {
+        grid-template-areas:
+            "generalInfo acciones"
+            "consultas consultas"
+            "procedimientos procedimientos";
+    }
+
+    #acciones-container {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* Móvil (hasta 767px) */
+@media (max-width: 767px) {
+    .main-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "logo"
+            "date-time"
+            "user"
+            "sidebar"
+            "content-area";
+        margin-top: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        transform: none;
+        width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .logo-dashboard {
+        width: 100%;
+        text-align: center;
+    }
+
+    .logo-dashboard img {
+        width: 50%;
+        padding: 5px 0;
+    }
+
+    .date-time {
+        padding: 6px 0;
+        text-align: center;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        width: 100%;
+    }
+
+    .user {
+        padding: 4px;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Sidebar horizontal en móvil */
+    #sidebar-container {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 0;
+        padding: 4px 0;
+        border-radius: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    #usuarios-btn, #inicio-btn, #citas-btn,
+    #historial-btn, #inventario-btn, #autorizaciones-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: auto;
+        padding: 6px 10px;
+        grid-template-areas: none;
+    }
+
+    #usuarios-btn img, #inicio-btn img, #citas-btn img,
+    #historial-btn img, #inventario-btn img, #autorizaciones-btn img {
+        width: 24px;
+        margin: 0;
+    }
+
+    #usuarios-btn p, #inicio-btn p, #citas-btn p,
+    #historial-btn p, #inventario-btn p, #autorizaciones-btn p {
+        font-size: 0.75rem;
+        margin: 2px 0 0 0;
+        text-align: center;
+    }
+
+    /* Contenedores: scroll horizontal para tablas */
+    #user-container, #inventario-container, #historial-container,
+    #autorizaciones-container, #citas-container, #consult-menu {
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #content-area {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    #tables {
+        font-size: 0.8rem;
+        min-width: 600px;
+        min-height: auto;
+        width: max-content;
+    }
+
+    /* Barra de búsqueda */
+    #search {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #search label {
+        font-size: 1rem;
+        margin-left: 0;
+    }
+
+    #search input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #btn-adduser {
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    /* Formulario modal */
+    #adduser-container {
+        margin-left: 2%;
+        margin-right: 2%;
+        width: 96%;
+        top: 2vh;
+        height: 94%;
+    }
+
+    #adduser-form select {
+        margin-right: 0;
+        width: 100%;
+    }
+
+    /* Paginación */
+    #paging {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    #paging button {
+        font-size: 0.85rem;
+        padding: 6px 9px;
+    }
+
+    /* Título */
+    #title-content h1 {
+        font-size: 1.5rem;
+        padding-left: 2%;
+    }
+
+    /* ===== TABLAS VERTICALES (card layout) ===== */
+    #tables thead,
+    #tables-citas thead {
+        display: none;
+    }
+
+    #tables,
+    #tables-citas {
+        min-width: unset;
+        width: 100%;
+        border: none;
+        background: transparent;
+        border-spacing: 0;
+    }
+
+    #tables tbody,
+    #tables-citas tbody {
+        display: block;
+        width: 100%;
+    }
+
+    #tables tr,
+    #tables-citas tr {
+        display: block;
+        margin: 0 8px 8px 8px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        overflow: hidden;
+    }
+
+    #tables td,
+    #tables-citas td {
+        display: flex;
+        align-items: center;
+        padding: 5px 12px;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        font-size: 0.85rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #tables td:last-child,
+    #tables-citas td:last-child {
+        border-bottom: none;
+    }
+
+    #tables td::before,
+    #tables-citas td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #498EC9;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        min-width: 45%;
+        margin-right: 8px;
+    }
+
+    /* ===== HISTORIAL ===== */
+    #search-historial {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #searchInput-historial {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #nuevo-registroBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Resumen historial: una sola columna */
+    #resumen-historial {
+        grid-template-areas:
+            "generalInfo"
+            "acciones"
+            "consultas"
+            "procedimientos";
+        grid-template-columns: 1fr;
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    #generalInfo-container {
+        grid-template-areas:
+            "icono nombre"
+            "codigo codigo"
+            "id-paciente sexo"
+            "fecha-nacimiento rh"
+            "edad edad"
+            "antecedentePersonales antecedentePersonales"
+            "antecedentesFamiliares antecedentesFamiliares";
+        grid-template-columns: auto 1fr;
+    }
+
+    #nombre-paciente {
+        font-size: 1.3rem;
+        margin-right: 0;
+    }
+
+    #acciones-container {
+        width: 100%;
+        margin-left: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px;
+    }
+
+    #consultas-container,
+    #procedimientos-container {
+        overflow-x: auto;
+    }
+
+    #tables-consultas,
+    #tables-procedimientos {
+        min-width: 450px;
+        font-size: 0.85rem;
+    }
+
+    #acciones-container button,
+    #consultaBtn,
+    #recetaBtn {
+        font-size: 0.9rem;
+    }
+
+    /* Modales historial */
+    #addhistorial-container,
+    #addconsulta-container,
+    #addreceta-container {
+        margin-left: 2%;
+        margin-right: 2%;
+        width: 96%;
+        top: 2vh;
+        height: 94%;
+    }
+
+    #addhistorial-form select,
+    #addconsulta-form select {
+        margin-right: 0;
+        width: 100%;
+    }
+
+    /* ===== INVENTARIO ===== */
+    #filtros-items {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-left: 0;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #filtros-items button {
+        width: auto;
+        flex: 1 1 40%;
+        font-size: 0.95rem;
+        padding: 8px;
+    }
+
+    #search-inventario {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+        margin-left: 0;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    #searchInput-inventario {
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+    }
+
+    #nuevo-itemBtn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    #additem-container {
+        margin-left: 2%;
+        margin-right: 2%;
+        width: 96%;
+        top: 2vh;
+        height: 94%;
+    }
+
+    #additem-form select {
+        width: 100%;
+    }
+
+    /* ===== CITAS ===== */
+    #citas-container {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        box-sizing: border-box;
+    }
+
+    #select-menu {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    #select-menu button {
+        width: 100%;
+        margin: 0;
+    }
+
+    #search-section {
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #searchInput-consult {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #tables-citas {
+        min-width: 550px;
+        font-size: 0.8rem;
+    }
+
+    #consult-menu {
+        overflow-x: auto;
+    }
+
+    #schedule-cita {
+        margin: 0;
+    }
+
+    #select-content {
+        padding: 0 4%;
+    }
+
+    #options-sedes,
+    #options-medicos {
+        height: auto;
+        max-height: 25vh;
+        overflow-y: auto;
+    }
+
+    #options-calendario {
+        flex-direction: column;
+    }
+
+    #buttons-schedule {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0;
+        padding: 10px;
+        justify-content: stretch;
+    }
+
+    #buttons-schedule button {
+        width: 100%;
+        margin: 0;
+    }
+
+    /* ===== AUTORIZACIONES ===== */
+    #autorizaciones-container {
+        width: 100%;
+        overflow-x: auto;
+        box-sizing: border-box;
+    }
+
+    #search-autorizacion {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #searchInput-autorizacion {
+        width: 100%;
+        margin-left: 0;
+        box-sizing: border-box;
+    }
+}
+
+/* Pantallas muy pequeñas (hasta 480px) */
+@media (max-width: 480px) {
+    #sidebar-container {
+        gap: 0;
+    }
+
+    #usuarios-btn, #inicio-btn, #citas-btn,
+    #historial-btn, #inventario-btn, #autorizaciones-btn {
+        padding: 4px 6px;
+    }
+
+    #usuarios-btn p, #inicio-btn p, #citas-btn p,
+    #historial-btn p, #inventario-btn p, #autorizaciones-btn p {
+        font-size: 0.65rem;
+    }
+
+    #titulo-dashboard,
+    #title-content h1 {
+        font-size: 1.2rem;
+    }
+
+    .page-btn {
+        padding: 4px 7px;
+        font-size: 0.8rem;
+    }
+
+    #nombre-paciente {
+        font-size: 1.1rem;
+    }
+
+    #acciones-container button {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    #filtros-items button {
+        flex: 1 1 100%;
+    }
 }

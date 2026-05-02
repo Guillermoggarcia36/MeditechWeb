@@ -38,6 +38,13 @@ const login = (req, res) => {
             const passwordMatch = await bcrypt.compare(clave, user.clave);
             if (!passwordMatch) return res.status(401).json({ message: "Contraseña incorrecta" });
 
+            // Migración transparente: si el hash tiene 10 rondas, re-hashear con 8
+            const saltRoundsActual = parseInt(user.clave.split('$')[2]);
+            if (saltRoundsActual > 8) {
+                const nuevoHash = await bcrypt.hash(clave, 8);
+                conn.query("UPDATE usuarios SET clave = ? WHERE id_usuario = ?", [nuevoHash, user.id_usuario]);
+            }
+
             // Crear token JWT
             const token = jwt.sign({ id_usuario: user.id_usuario, id_rolFK: user.id_rolFK }, JWT_SECRET, { expiresIn: "4h" });
 
@@ -66,7 +73,7 @@ const cambiarClave = (req, res) => {
         return res.status(400).json({ message: "ID y nueva contraseña requeridos" });
     }
 
-    const hashedPassword = bcrypt.hashSync(nuevaClave, 10);
+    const hashedPassword = bcrypt.hashSync(nuevaClave, 8);
 
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json({ message: "Error de conexión" });
@@ -89,7 +96,7 @@ const restablecerClave = (req, res) => {
     const { id_usuario } = req.body;
     const clave = id_usuario;
 
-    const hashedPassword = bcrypt.hashSync(String(id_usuario), 10);
+    const hashedPassword = bcrypt.hashSync(String(id_usuario), 8);
 
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json({ message: "Error de conexión" });

@@ -401,6 +401,7 @@ historialForm.addEventListener("submit", (e) => {
       campos.descripcion_general && 
       campos.estado_clinico) {
         creationHistorial();
+        closeForm();
         historialForm.reset();
     }
 });
@@ -626,30 +627,101 @@ function formatearHora12(hora24) {
 
 const historialBody = document.getElementById("historial-body");
 
+// Variables globales de paginación
+let totalHistoriales = [];
+let limite = 10;
+let desde = 0;
+let paginas = 1;
+let paginaActiva = 1;
+
+// Renderiza registros según la página activa
+function renderHistorial() {
+  historialBody.innerHTML = "";
+
+  const arreglo = totalHistoriales.slice(desde, desde + limite);
+
+  if (arreglo.length === 0) {
+    historialBody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding: 1.5rem; color: #888;">
+          No hay historiales médicos registrados.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  arreglo.forEach((historial) => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td data-label="ID Historial">${historial.codigo_historial}</td>
+      <td data-label="Paciente">${historial.paciente_nombre} ${historial.paciente_apellido}</td>
+      <td data-label="Fecha">${formatearFecha(historial.fecha_registro)}</td>
+      <td data-label="Estado clínico">${historial.estado_clinico}</td>
+      <td class="td-descripcion" data-label="Descripción">${historial.descripcion_general}</td>
+      <td data-label="Acciones">
+        <button class="ver-detalles-btn">Ver detalles</button>
+      </td>
+    `;
+    historialBody.appendChild(fila);
+  });
+  historialBody.style.animation = "fadeIn 0.5s ease-out";
+}
+
+// Genera botones numerados de paginación
+function cargarItemPaginacion() {
+  const contenedorPaginacion = document.getElementById("pages");
+  contenedorPaginacion.innerHTML = "";
+
+  for (let index = 0; index < paginas; index++) {
+    const btn = document.createElement("button");
+    btn.className = `page-btn ${paginaActiva === index + 1 ? "active" : ""}`;
+    btn.textContent = index + 1;
+    btn.addEventListener("click", () => pasarPagina(index));
+    contenedorPaginacion.appendChild(btn);
+  }
+}
+
+window.pasarPagina = (paginaIndex) => {
+  paginaActiva = paginaIndex + 1;
+  desde = limite * paginaIndex;
+  renderHistorial();
+  cargarItemPaginacion();
+};
+
+window.nextPage = () => {
+  if (paginaActiva < paginas) {
+    paginaActiva++;
+    desde += limite;
+    renderHistorial();
+    cargarItemPaginacion();
+  }
+};
+
+window.previusPage = () => {
+  if (paginaActiva > 1) {
+    paginaActiva--;
+    desde -= limite;
+    renderHistorial();
+    cargarItemPaginacion();
+  }
+};
+
 async function cargarHistorial() {
   const backContainer = document.getElementById("back-container");
-  backContainer.style.display = "none"; // Muestra el botón de volver
+  backContainer.style.display = "none";
 
   try {
     const response = await fetch(API_HISTORIAL);
     const historiales = await response.json();
-    historialBody.innerHTML = ""; // Limpia el cuerpo de la tabla antes de agregar nuevos datos
 
-    historiales.forEach((historial) => {
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
-                <td>${historial.codigo_historial}</td>
-                <td>${historial.paciente_nombre} ${historial.paciente_apellido}</td>
-                <td>${formatearFecha(historial.fecha_registro)}</td>
-                <td>${historial.estado_clinico}</td>
-                <td class="td-descripcion">${historial.descripcion_general}</td>
-                <td>
-                  <button id="ver-detalles">Ver detalles</button>
-                </td>
-            `;
-      historialBody.appendChild(fila);
-    });
-    historialBody.style.animation = "fadeIn 0.5s ease-out";
+    totalHistoriales = historiales || [];
+    paginas = Math.ceil(totalHistoriales.length / limite);
+    desde = 0;
+    paginaActiva = 1;
+
+    renderHistorial();
+    cargarItemPaginacion();
   } catch (error) {
     console.error("Error cargando historial:", error);
   }
@@ -753,6 +825,65 @@ async function cargarProcedimientos() {
 window.addEventListener("DOMContentLoaded", () => {
   cargarHistorial();
   cerrarInformacionGeneral();
+
+  const prevBtn = document.querySelector("#previous-btn button");
+  const nextBtn = document.querySelector("#next-page button");
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      previusPage();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      nextPage();
+    });
+  }
+});
+
+// Buscador de historial
+const buscadorHistorial = document.getElementById("searchInput-historial");
+
+buscadorHistorial.addEventListener("keyup", () => {
+  const texto = buscadorHistorial.value.toLowerCase();
+  const pagingContainer = document.getElementById("paging");
+
+  if (texto === "") {
+    desde = 0;
+    paginaActiva = 1;
+    renderHistorial();
+    cargarItemPaginacion();
+    pagingContainer.classList.remove("hidden");
+    return;
+  }
+
+  const filtrados = totalHistoriales.filter(historial => {
+    return (
+      String(historial.codigo_historial).includes(texto) ||
+      (historial.paciente_nombre + " " + historial.paciente_apellido).toLowerCase().includes(texto) ||
+      formatearFecha(historial.fecha_registro).toLowerCase().includes(texto) ||
+      historial.estado_clinico.toLowerCase().includes(texto) ||
+      historial.descripcion_general.toLowerCase().includes(texto)
+    );
+  });
+
+  if (filtrados.length === 0) {
+    historialBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #999;">No se encontraron registros</td></tr>';
+    document.getElementById("pages").innerHTML = "";
+    return;
+  }
+
+  const respaldo = totalHistoriales;
+  totalHistoriales = filtrados;
+
+  desde = 0;
+  paginaActiva = 1;
+  renderHistorial();
+  cargarItemPaginacion();
+  pagingContainer.classList.remove("hidden");
+
+  totalHistoriales = respaldo;
 });
 
 async function cargarResumenHistorial(historial) {
@@ -825,7 +956,7 @@ function abrirInformacionGeneral(historial) {
 
 // Event delegation para botones dinámicos
 historialBody.addEventListener("click", async (event) => {
-    if (event.target.id === "ver-detalles") {
+    if (event.target.classList.contains("ver-detalles-btn")) {
         const row = event.target.closest("tr");
         const codigoHistorial = row.children[0].textContent;
         

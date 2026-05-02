@@ -13,6 +13,91 @@ function ocultarConstruccion() {
 
 window.addEventListener("DOMContentLoaded", () => {
   cargarTodo();
+
+  const prevBtn = document.querySelector("#previous-btn button");
+  const nextBtn = document.querySelector("#next-page button");
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      previusPage();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      nextPage();
+    });
+  }
+});
+
+// Buscador de inventario
+const buscadorInventario = document.getElementById("searchInput-inventario");
+
+buscadorInventario.addEventListener("keyup", () => {
+  const texto = buscadorInventario.value.toLowerCase();
+  const pagingContainer = document.getElementById("paging");
+
+  if (texto === "") {
+    desde = 0;
+    paginaActiva = 1;
+    renderPagina();
+    cargarItemPaginacion();
+    pagingContainer.classList.remove("hidden");
+    return;
+  }
+
+  const respaldo = totalItems;
+
+  let filtrados;
+  if (tipoActual === "medicamentos") {
+    filtrados = todosLosMedicamentos.filter(item =>
+      item.nombre_medicamento.toLowerCase().includes(texto) ||
+      String(item.id_medicamento).includes(texto) ||
+      item.categoria_medicamento.toLowerCase().includes(texto) ||
+      item.descripcion_medicamento.toLowerCase().includes(texto)
+    );
+  } else if (tipoActual === "insumos") {
+    filtrados = todosLosInsumos.filter(item =>
+      item.nombre_insumo.toLowerCase().includes(texto) ||
+      String(item.id_insumo).includes(texto) ||
+      item.categoria_insumo.toLowerCase().includes(texto) ||
+      item.descripcion_insumo.toLowerCase().includes(texto)
+    );
+  } else {
+    filtrados = respaldo.filter(item => {
+      if (item._tipo === "medicamento") {
+        return (
+          item.nombre_medicamento.toLowerCase().includes(texto) ||
+          String(item.id_medicamento).includes(texto) ||
+          item.categoria_medicamento.toLowerCase().includes(texto) ||
+          item.descripcion_medicamento.toLowerCase().includes(texto)
+        );
+      } else {
+        return (
+          item.nombre_insumo.toLowerCase().includes(texto) ||
+          String(item.id_insumo).includes(texto) ||
+          item.categoria_insumo.toLowerCase().includes(texto) ||
+          item.descripcion_insumo.toLowerCase().includes(texto)
+        );
+      }
+    });
+  }
+
+  if (filtrados.length === 0) {
+    inventarioBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#999;">No se encontraron items</td></tr>';
+    document.getElementById("pages").innerHTML = "";
+    return;
+  }
+
+  totalItems = filtrados;
+  desde = 0;
+  paginaActiva = 1;
+  paginas = Math.ceil(totalItems.length / limite);
+  renderPagina();
+  cargarItemPaginacion();
+  pagingContainer.classList.remove("hidden");
+
+  totalItems = respaldo;
 });
 
 const overlay = document.getElementById("overlay");
@@ -20,7 +105,9 @@ const addItemContainer = document.getElementById("additem-container");
 
 const cancelBtnForms = document.querySelectorAll(".cancelBtn");
 cancelBtnForms.forEach((btn) => {
-  btn.addEventListener("click", () => closeForm());
+  btn.addEventListener("click", () => {
+    closeForm();
+  });
 });
 
 function openForm() {
@@ -31,6 +118,9 @@ function openForm() {
 function closeForm() {
   overlay.classList.remove("active");
   addItemContainer.style.display = "none";
+
+  guardarBtn.style.display = "block";
+  guardarCambiosBtn.style.display = "none";
 
   const addForms = document.querySelectorAll(".addForms");
   addForms.forEach((form) => form.reset());
@@ -49,10 +139,21 @@ function closeForm() {
         categoria_insumo: false,
         descripcion_insumo: false,
     };
+
+    const inputs = document.querySelectorAll(".addForms select, .addForms input, .addForms textarea");
+    inputs.forEach(input => {
+        input.disabled = false;
+        input.style.cursor = "auto";
+    });
+
+
 }
 
 const nuevoItemBtn = document.getElementById("nuevo-itemBtn");
-nuevoItemBtn.addEventListener("click", () => openForm());
+nuevoItemBtn.addEventListener("click", () => {
+  guardarCambiosBtn.style.display = "none";
+  openForm();
+});
 
 ocultarConstruccion();
 
@@ -62,6 +163,14 @@ const insumosBtn = document.getElementById("insumosBtn");
 
 let todosLosMedicamentos = [];
 let todosLosInsumos = [];
+
+// Variables de paginación
+let totalItems = [];
+let tipoActual = "todo"; // "todo" | "medicamentos" | "insumos"
+let limite = 10;
+let desde = 0;
+let paginas = 1;
+let paginaActiva = 1;
 
 const expresiones = {
     tipo_item: /^(medicamento|insumo)$/,
@@ -107,13 +216,14 @@ function renderMedicamentos(medicamentos) {
   medicamentos.forEach((item) => {
     const fila = document.createElement("tr");
     fila.innerHTML = `
-            <td>${item.id_medicamento}</td>
-            <td>${item.stock_disponible}</td>
-            <td>${item.nombre_medicamento}</td>
-            <td>${item.categoria_medicamento}</td>
-            <td class="td-descripcion">${item.descripcion_medicamento}</td>
-            <td>${formatearFecha(item.fecha_vencimiento)}</td>
-            <td>
+            <td data-label="ID">${item.id_medicamento}</td>
+            <td data-label="Stock">${item.stock_disponible}</td>
+            <td data-label="Nombre">${item.nombre_medicamento}</td>
+            <td data-label="Categoría">${item.categoria_medicamento}</td>
+            <td class="td-descripcion" data-label="Descripción">${item.descripcion_medicamento}</td>
+            <td data-label="Vencimiento" data-fecha="${item.fecha_vencimiento || ''}">${formatearFecha(item.fecha_vencimiento)}</td>
+            <td data-label="Estado">${item.estado_item}</td>
+            <td data-label="Acciones">
                 <button class="ver-medicamento" style="border:none; background-color:transparent;">
                     <img src="../assets/icons/ver2.png" alt="Ver" style="width:26px; height:26px;">
                 </button>
@@ -143,13 +253,14 @@ function renderInsumos(insumos) {
   insumos.forEach((item) => {
     const fila = document.createElement("tr");
     fila.innerHTML = `
-            <td>${item.id_insumo}</td>
-            <td>${item.stock_disponible}</td>
-            <td>${item.nombre_insumo}</td>
-            <td>${item.categoria_insumo}</td>
-            <td class="td-descripcion">${item.descripcion_insumo}</td>
-            <td>${formatearFecha(item.fecha_vencimiento)}</td>
-            <td>
+            <td data-label="ID">${item.id_insumo}</td>
+            <td data-label="Stock">${item.stock_disponible}</td>
+            <td data-label="Nombre">${item.nombre_insumo}</td>
+            <td data-label="Categoría">${item.categoria_insumo}</td>
+            <td class="td-descripcion" data-label="Descripción">${item.descripcion_insumo}</td>
+            <td data-label="Vencimiento" data-fecha="${item.fecha_vencimiento || ''}">${formatearFecha(item.fecha_vencimiento)}</td>
+            <td data-label="Estado">${item.estado_item}</td>
+            <td data-label="Acciones">
                 <button class="ver-insumo" style="border:none; background-color:transparent;">
                     <img src="../assets/icons/ver2.png" alt="Ver" style="width:26px; height:26px;">
                 </button>
@@ -167,6 +278,121 @@ function renderInsumos(insumos) {
   });
 }
 
+// Renderiza items combinados (medicamentos + insumos) para la vista "todo"
+function renderCombinado(items) {
+  inventarioBody.innerHTML = "";
+
+  if (!items.length) {
+    inventarioBody.innerHTML =
+      "<tr><td colspan='7' style='text-align:center; padding:20px;'>No hay items registrados</td></tr>";
+    return;
+  }
+
+  items.forEach((item) => {
+    const fila = document.createElement("tr");
+    if (item._tipo === "medicamento") {
+      fila.innerHTML = `
+        <td data-label="ID">${item.id_medicamento}</td>
+        <td data-label="Stock">${item.stock_disponible}</td>
+        <td data-label="Nombre">${item.nombre_medicamento}</td>
+        <td data-label="Categoría">${item.categoria_medicamento}</td>
+        <td class="td-descripcion" data-label="Descripción">${item.descripcion_medicamento}</td>
+        <td data-label="Vencimiento" data-fecha="${item.fecha_vencimiento || ''}">${formatearFecha(item.fecha_vencimiento)}</td>
+        <td data-label="Estado">${item.estado_item}</td>
+        <td data-label="Acciones">
+          <button class="ver-medicamento" style="border:none; background-color:transparent;">
+            <img src="../assets/icons/ver2.png" alt="Ver" style="width:26px; height:26px;">
+          </button>
+          <button class="editar-medicamento" style="border:none; background-color:transparent;">
+            <img src="../assets/icons/editar.png" alt="Editar" style="width:26px; height:26px;">
+          </button>
+          <button class="inactivar-medicamento" style="border:none; background-color:transparent;">
+            <img src="../assets/icons/borrar.png" alt="Inactivar" style="width:26px; height:26px;">
+          </button>
+        </td>
+      `;
+      fila.querySelector(".ver-medicamento").dataset.item = JSON.stringify(item);
+      fila.querySelector(".inactivar-medicamento").dataset.item = JSON.stringify(item);
+    } else {
+      fila.innerHTML = `
+        <td data-label="ID">${item.id_insumo}</td>
+        <td data-label="Stock">${item.stock_disponible}</td>
+        <td data-label="Nombre">${item.nombre_insumo}</td>
+        <td data-label="Categoría">${item.categoria_insumo}</td>
+        <td class="td-descripcion" data-label="Descripción">${item.descripcion_insumo}</td>
+        <td data-label="Vencimiento" data-fecha="${item.fecha_vencimiento || ''}">${formatearFecha(item.fecha_vencimiento)}</td>
+        <td data-label="Estado">${item.estado_item}</td>
+        <td data-label="Acciones">
+          <button class="ver-insumo" style="border:none; background-color:transparent;">
+            <img src="../assets/icons/ver2.png" alt="Ver" style="width:26px; height:26px;">
+          </button>
+          <button class="editar-insumo" style="border:none; background-color:transparent;">
+            <img src="../assets/icons/editar.png" alt="Editar" style="width:26px; height:26px;">
+          </button>
+          <button class="inactivar-insumo" style="border:none; background-color:transparent;">
+            <img src="../assets/icons/borrar.png" alt="Inactivar" style="width:26px; height:26px;">
+          </button>
+        </td>
+      `;
+      fila.querySelector(".ver-insumo").dataset.item = JSON.stringify(item);
+      fila.querySelector(".inactivar-insumo").dataset.item = JSON.stringify(item);
+    }
+    inventarioBody.appendChild(fila);
+  });
+}
+
+// Renderiza la página activa según el tipo de vista actual
+function renderPagina() {
+  const slice = totalItems.slice(desde, desde + limite);
+
+  if (tipoActual === "medicamentos") {
+    renderMedicamentos(slice);
+  } else if (tipoActual === "insumos") {
+    renderInsumos(slice);
+  } else {
+    renderCombinado(slice);
+  }
+}
+
+// Genera botones numerados de paginación
+function cargarItemPaginacion() {
+  const contenedorPaginacion = document.getElementById("pages");
+  contenedorPaginacion.innerHTML = "";
+
+  for (let index = 0; index < paginas; index++) {
+    const btn = document.createElement("button");
+    btn.className = `page-btn ${paginaActiva === index + 1 ? "active" : ""}`;
+    btn.textContent = index + 1;
+    btn.addEventListener("click", () => pasarPagina(index));
+    contenedorPaginacion.appendChild(btn);
+  }
+}
+
+window.pasarPagina = (paginaIndex) => {
+  paginaActiva = paginaIndex + 1;
+  desde = limite * paginaIndex;
+  renderPagina();
+  cargarItemPaginacion();
+};
+
+window.nextPage = () => {
+  if (paginaActiva < paginas) {
+    paginaActiva++;
+    desde += limite;
+    renderPagina();
+    cargarItemPaginacion();
+  }
+};
+
+window.previusPage = () => {
+  if (paginaActiva > 1) {
+    paginaActiva--;
+    desde -= limite;
+    renderPagina();
+    cargarItemPaginacion();
+  }
+};
+
 async function cargarTodo() {
   try {
     const [medicamentos, insumos] = await Promise.all([
@@ -177,59 +403,17 @@ async function cargarTodo() {
     todosLosMedicamentos = medicamentos;
     todosLosInsumos = insumos;
 
-    inventarioBody.innerHTML = "";
+    const medicamentosTagged = medicamentos.map(i => ({ ...i, _tipo: "medicamento" }));
+    const insumosTagged = insumos.map(i => ({ ...i, _tipo: "insumo" }));
 
-    todosLosMedicamentos.forEach((item) => {
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
-                <td>${item.id_medicamento}</td>
-                <td>${item.stock_disponible}</td>
-                <td>${item.nombre_medicamento}</td>
-                <td>${item.categoria_medicamento}</td>
-                <td class="td-descripcion">${item.descripcion_medicamento}</td>
-                <td>${formatearFecha(item.fecha_vencimiento)}</td>
-                <td>
-                    <button class="ver-medicamento" data-id="${item.id_medicamento}" data-tipo="medicamento" style=" border: none; background-color: transparent;">
-                        <img src="../assets/icons/ver2.png" alt="Ver" style="width:26px; height:26px;">
-                    </button>
-                    <button class="editar-medicamento" data-id="${item.id_medicamento}" data-tipo="medicamento" style=" border: none; background-color: transparent;">
-                        <img src="../assets/icons/editar.png" alt="Editar" style="width:26px; height:26px;">
-                    </button>
-                    <button class="inactivar-medicamento" data-id="${item.id_medicamento}" data-tipo="medicamento" style=" border: none; background-color: transparent;">
-                        <img src="../assets/icons/borrar.png" alt="Inactivar" style="width:26px; height:26px;">
-                    </button>
-                </td>
-            `;
-      fila.querySelector(".ver-medicamento").dataset.item = JSON.stringify(item);
-      fila.querySelector(".inactivar-medicamento").dataset.item = JSON.stringify(item);
-      inventarioBody.appendChild(fila);
-    });
+    tipoActual = "todo";
+    totalItems = [...medicamentosTagged, ...insumosTagged];
+    paginas = Math.ceil(totalItems.length / limite);
+    desde = 0;
+    paginaActiva = 1;
 
-    todosLosInsumos.forEach((item) => {
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
-                <td>${item.id_insumo}</td>
-                <td>${item.stock_disponible}</td>
-                <td>${item.nombre_insumo}</td>
-                <td>${item.categoria_insumo}</td>
-                <td class="td-descripcion">${item.descripcion_insumo}</td>
-                <td>${formatearFecha(item.fecha_vencimiento)}</td>
-                <td>
-                    <button class="ver-insumo" data-id="${item.id_insumo}" data-tipo="insumo" style=" border: none; background-color: transparent;">
-                        <img src="../assets/icons/ver2.png" alt="Ver" style="width:26px; height:26px;">
-                    </button>
-                    <button class="editar-insumo" data-id="${item.id_insumo}" data-tipo="insumo" style=" border: none; background-color: transparent;">
-                        <img src="../assets/icons/editar.png" alt="Editar" style="width:26px; height:26px;">
-                    </button>
-                    <button class="inactivar-insumo" data-id="${item.id_insumo}" data-tipo="insumo" style=" border: none; background-color: transparent;">
-                        <img src="../assets/icons/borrar.png" alt="Inactivar" style="width:26px; height:26px;">
-                    </button>
-                </td>
-            `;
-      fila.querySelector(".ver-insumo").dataset.item = JSON.stringify(item);
-      fila.querySelector(".inactivar-insumo").dataset.item = JSON.stringify(item);
-      inventarioBody.appendChild(fila);
-    });
+    renderPagina();
+    cargarItemPaginacion();
   } catch (error) {
     console.error("Error cargando inventario:", error);
   }
@@ -238,24 +422,57 @@ async function cargarTodo() {
 medicamentoBtn.addEventListener("click", () => {
   if (medicamentoBtn.classList.contains("active")) {
     medicamentoBtn.classList.remove("active");
-    cargarTodo();
+    tipoActual = "todo";
+    totalItems = [
+      ...todosLosMedicamentos.map(i => ({ ...i, _tipo: "medicamento" })),
+      ...todosLosInsumos.map(i => ({ ...i, _tipo: "insumo" }))
+    ];
+    paginas = Math.ceil(totalItems.length / limite);
+    desde = 0;
+    paginaActiva = 1;
+    renderPagina();
+    cargarItemPaginacion();
   } else {
     medicamentoBtn.classList.add("active");
     insumosBtn.classList.remove("active");
-    renderMedicamentos(todosLosMedicamentos);
+    tipoActual = "medicamentos";
+    totalItems = todosLosMedicamentos;
+    paginas = Math.ceil(totalItems.length / limite);
+    desde = 0;
+    paginaActiva = 1;
+    renderPagina();
+    cargarItemPaginacion();
   }
 });
 
 insumosBtn.addEventListener("click", () => {
   if (insumosBtn.classList.contains("active")) {
     insumosBtn.classList.remove("active");
-    cargarTodo();
+    tipoActual = "todo";
+    totalItems = [
+      ...todosLosMedicamentos.map(i => ({ ...i, _tipo: "medicamento" })),
+      ...todosLosInsumos.map(i => ({ ...i, _tipo: "insumo" }))
+    ];
+    paginas = Math.ceil(totalItems.length / limite);
+    desde = 0;
+    paginaActiva = 1;
+    renderPagina();
+    cargarItemPaginacion();
   } else {
     insumosBtn.classList.add("active");
     medicamentoBtn.classList.remove("active");
-    renderInsumos(todosLosInsumos);
+    tipoActual = "insumos";
+    totalItems = todosLosInsumos;
+    paginas = Math.ceil(totalItems.length / limite);
+    desde = 0;
+    paginaActiva = 1;
+    renderPagina();
+    cargarItemPaginacion();
   }
 });
+
+const guardarBtn = document.getElementById("submit");
+const guardarCambiosBtn = document.getElementById("save-changes");
 
 inventarioBody.addEventListener("click", (e) => {
   const btnMed = e.target.closest(".ver-medicamento");
@@ -265,12 +482,12 @@ inventarioBody.addEventListener("click", (e) => {
       title: item.nombre_medicamento,
       html: `
                 <div style="text-align:left; line-height:1.8;">
-                    <p><strong>ID:</strong> ${item.id_medicamento}</p>
-                    <p><strong>Stock:</strong> ${item.stock_disponible}</p>
-                    <p><strong>Categoría:</strong> ${item.categoria_medicamento}</p>
-                    <p><strong>Descripción:</strong> ${item.descripcion_medicamento}</p>
-                    <p><strong>Vencimiento:</strong> ${formatearFecha(item.fecha_vencimiento)}</p>
-                    <p><strong>Estado:</strong> ${item.estado_item}</p>
+                    <p><strong>ID:</strong><br> ${item.id_medicamento}</br></p>
+                    <p><strong>Stock:</strong><br> ${item.stock_disponible}</br></p>
+                    <p><strong>Categoría:</strong><br> ${item.categoria_medicamento}</br></p>
+                    <p><strong>Descripción:</strong><br> ${item.descripcion_medicamento}</br></p>
+                    <p><strong>Vencimiento:</strong><br> ${formatearFecha(item.fecha_vencimiento)}</br></p>
+                    <p><strong>Estado:</strong><br> ${item.estado_item}</br></p>
                 </div>
             `,
       confirmButtonText: "<b>Cerrar</b>",
@@ -279,6 +496,7 @@ inventarioBody.addEventListener("click", (e) => {
     return;
   }
 
+  // Ver detalles de insumo
   const btnIns = e.target.closest(".ver-insumo");
   if (btnIns) {
     const item = JSON.parse(btnIns.dataset.item);
@@ -286,12 +504,12 @@ inventarioBody.addEventListener("click", (e) => {
       title: item.nombre_insumo,
       html: `
                 <div style="text-align:left; line-height:1.8;">
-                    <p><strong>ID:</strong> ${item.id_insumo}</p>
-                    <p><strong>Stock:</strong> ${item.stock_disponible}</p>
-                    <p><strong>Categoría:</strong> ${item.categoria_insumo}</p>
-                    <p><strong>Descripción:</strong> ${item.descripcion_insumo}</p>
-                    <p><strong>Vencimiento:</strong> ${formatearFecha(item.fecha_vencimiento)}</p>
-                    <p><strong>Estado:</strong> ${item.estado_item}</p>
+                    <p><strong>ID:</strong><br> ${item.id_insumo}</br></p>
+                    <p><strong>Stock:</strong><br> ${item.stock_disponible}</br></p>
+                    <p><strong>Categoría:</strong><br> ${item.categoria_insumo}</br></p>
+                    <p><strong>Descripción:</strong><br> ${item.descripcion_insumo}</br></p>
+                    <p><strong>Vencimiento:</strong><br> ${formatearFecha(item.fecha_vencimiento)}</br></p>
+                    <p><strong>Estado:</strong><br> ${item.estado_item}</br></p>
                 </div>
             `,
       confirmButtonText: "<b>Cerrar</b>",
@@ -410,6 +628,78 @@ inventarioBody.addEventListener("click", (e) => {
       }
     });
   }
+
+  // Editar medicamento o insumo
+  const btnEditarMed = e.target.closest(".editar-medicamento");
+  const btnEditarIns = e.target.closest(".editar-insumo");
+  const btnEditar = btnEditarMed || btnEditarIns;
+  if (btnEditar) {
+    const esMedicamento = !!btnEditarMed;
+
+    guardarBtn.style.display = "none";
+
+    guardarCambiosBtn.style.display = "none";
+
+    openForm();
+
+    const fila = e.target.closest("tr");
+    const celdas = fila.querySelectorAll("td");
+
+    const itemInfo = {
+      id: celdas[0].textContent,
+      stock_disponible: celdas[1].textContent,
+      nombre: celdas[2].textContent,
+      categoria: celdas[3].textContent,
+      descripcion: celdas[4].textContent,
+      fecha_vencimiento: celdas[5].dataset.fecha || "",
+      estado_item: celdas[6].textContent,
+    };
+
+    console.log("itemInfo:", itemInfo);
+
+    const tipoItemInput = document.getElementById("tipoItem");
+    tipoItemInput.value = esMedicamento ? "medicamento" : "insumo";
+    tipoItemInput.disabled = true;
+    tipoItemInput.style.cursor = "not-allowed";
+
+    const idItemInput = document.getElementById("idItem");
+    idItemInput.value = itemInfo.id;
+    idItemInput.disabled = true;
+    idItemInput.style.cursor = "not-allowed";
+
+    const nombreItemInput = document.getElementById("nombreItem");
+    nombreItemInput.value = itemInfo.nombre;
+
+    const stockItemInput = document.getElementById("stockItem");
+    stockItemInput.value = itemInfo.stock_disponible;
+    stockItemInput.disabled = false;
+
+    const categoriaItemInput = document.getElementById("categoriaItem");
+    categoriaItemInput.value = itemInfo.categoria;
+    categoriaItemInput.disabled = true;
+    categoriaItemInput.style.cursor = "not-allowed";
+
+    const descripcionItemInput = document.getElementById("descripcionItem");
+    descripcionItemInput.value = itemInfo.descripcion
+    descripcionItemInput.disabled = true;
+    descripcionItemInput.style.cursor = "not-allowed";
+
+    const fechaVencimientoInput = document.getElementById("fechaVencimiento");
+    fechaVencimientoInput.value = itemInfo.fecha_vencimiento ? itemInfo.fecha_vencimiento.split("T")[0] : "";
+    fechaVencimientoInput.disabled = true;
+    fechaVencimientoInput.style.cursor = "not-allowed";
+
+    const estadoItemInput = document.getElementById("estadoItem");
+    estadoItemInput.value = itemInfo.estado_item;
+
+
+    const addItemForm = document.getElementById("additem-form");
+    addItemForm.addEventListener("input", () => {
+      guardarCambiosBtn.style.display = "block";
+    }, { once: true });
+
+    return;
+  }
 });
 
 const validarFormulario = (e) => {
@@ -504,6 +794,18 @@ inputs.forEach((input) => {
   input.addEventListener("blur", validarFormulario);
 });
 
+// Rueda del mouse sobre input numérico enfocado, sin importar dónde esté el cursor
+window.addEventListener("wheel", (e) => {
+  const active = document.activeElement;
+  if (active && active.type === "number") {
+    e.preventDefault();
+    const step = Number(active.step) || 1;
+    active.value = Number(active.value) + (e.deltaY < 0 ? step : -step);
+    active.dispatchEvent(new Event("keyup", { bubbles: true }));
+    active.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}, { passive: false });
+
 // Agregar listeners para select y textarea
 const selects = document.querySelectorAll(".addForms select");
 const textareas = document.querySelectorAll(".addForms textarea");
@@ -518,6 +820,8 @@ textareas.forEach((textarea) => {
 });
 
 const addItemForm = document.getElementById("additem-form");
+
+// Un único submit listener para crear items (POST)
 addItemForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -556,11 +860,12 @@ addItemForm.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+    console.log("Respuesta del servidor:", response);
     if (response.ok) {
       Swal.fire({
         icon: "success",
-        title: "Item registrado",
-        text: "El item se ha registrado correctamente",
+        title: "Item creado correctamente",
+        text: "El item se ha creado correctamente",
         timer: 2000,
         showConfirmButton: false,
       });
@@ -576,6 +881,78 @@ addItemForm.addEventListener("submit", async (e) => {
       icon: "error",
       title: "Error",
       text: "No se pudo registrar el item",
+    });
+  }
+});
+
+// Evento para guardar cambios de medicamento o insumo (PUT directo, sin submit)
+guardarCambiosBtn.addEventListener("click", async () => {
+  const tipo = document.getElementById("tipoItem").value;
+  const id = document.getElementById("idItem").value;
+  const stock_disponible = document.getElementById("stockItem").value;
+  const estado_item = document.getElementById("estadoItem").value;
+
+  let url, data;
+
+  if (tipo === "medicamento") {
+    url = API_MEDICAMENTOS;
+    data = {
+      id_medicamento: id,
+      nombre_medicamento: document.getElementById("nombreItem").value,
+      categoria_medicamento: document.getElementById("categoriaItem").value,
+      descripcion_medicamento: document.getElementById("descripcionItem").value,
+      stock_disponible,
+      fecha_vencimiento: document.getElementById("fechaVencimiento").value,
+      estado_item,
+    };
+  } else if (tipo === "insumo") {
+    url = API_INSUMOS;
+    data = {
+      id_insumo: id,
+      nombre_insumo: document.getElementById("nombreItem").value,
+      categoria_insumo: document.getElementById("categoriaItem").value,
+      descripcion_insumo: document.getElementById("descripcionItem").value,
+      stock_disponible,
+      fecha_vencimiento: document.getElementById("fechaVencimiento").value,
+      estado_item,
+    };
+  }
+
+  console.log("Datos a actualizar:", data);
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      Swal.fire({
+        title: "Cambios guardados correctamente",
+        icon: "success",
+        color: "#000000ff",
+        confirmButtonColor: "#498EC9",
+        timer: 3000,
+        customClass: { popup: "inactivationPopup" },
+      });
+      closeForm();
+      cargarTodo();
+    } else {
+      const errorText = await response.text();
+      console.error("Error en la actualización:", errorText);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el item",
+      });
+    }
+  } catch (err) {
+    console.error("Error al conectar con el servidor:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No se pudo conectar con el servidor",
     });
   }
 });

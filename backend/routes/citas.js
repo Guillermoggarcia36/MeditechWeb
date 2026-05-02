@@ -22,7 +22,10 @@ routes.post('/', (req, res) => {
     const citaData = { id_sedeFK, id_medicoFK, id_pacienteFK, fecha, hora };
 
     conn.query("INSERT INTO citas SET ?", citaData, (err, result) => {
-      if (err) return res.status(500).json(err);
+      if (err) {
+        console.error("Error INSERT cita:", err);
+        return res.status(500).json(err);
+      }
 
       // Variables para definir codigo de cita segun su id
       const idCita = result.insertId;
@@ -32,7 +35,10 @@ routes.post('/', (req, res) => {
         "UPDATE citas SET codigo_cita = ? WHERE id_cita = ?",
         [codigoCita, idCita],
         (err) => {
-          if (err) return res.status(500).json(err);
+          if (err) {
+            console.error("Error UPDATE codigo_cita:", err);
+            return res.status(500).json(err);
+          }
 
           res.json({
             message: "Cita registrada correctamente",

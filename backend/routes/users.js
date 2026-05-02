@@ -1,6 +1,6 @@
 const express = require('express');
 const routes = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 //Importar funciones del controlador
 const { login, cambiarClave, restablecerClave } = require('../controllers/authController');
@@ -19,21 +19,19 @@ routes.get('/', (req, res) => {
     });
 });
 
-//Ruta para crear usuarios en BD
-routes.post('/', (req, res) => {
-    req.getConnection((err, conn) => {
+//Ruta para crear usuarios
+routes.post('/', async (req, res) => {
+    req.getConnection(async (err, conn) => {
         if (err) return res.send(err);
 
         const datos = { ...req.body };
         if (datos.clave) {
-            const salt = bcrypt.genSaltSync(10);
-            datos.clave = bcrypt.hashSync(datos.clave, salt);
-        };
-        console.log(datos);
+            datos.clave = await bcrypt.hash(datos.clave, 8);
+        }
 
         conn.query('INSERT INTO usuarios SET ?', [datos], (err, rows) => {
             if (err) return res.send(err);
-            res.json(rows);
+            res.json({ message: "Usuario creado correctamente", usuario: datos });
         });
     });
 });

@@ -2,10 +2,12 @@
 API_URL_CONSULTASEDES = "http://localhost:9000/citas/sedes";
 
 // Variables de paginación
-let paginaActual = 1;
-const citasPorPagina = 5;
 let totalCitas = [];
 let citasCompletas = []; // Guardar citas originales sin filtrar
+let limite = 10;
+let desde = 0;
+let paginas = 1;
+let paginaActiva = 1;
 
 const nombrePaciente = localStorage.getItem("nameUser") + " " + localStorage.getItem("apellidoUser");
 const idPaciente = localStorage.getItem("idUsuario");
@@ -352,7 +354,9 @@ async function verificarEstadoCitas() {
       if (response.ok) {
         citasCompletas = await response.json();
         totalCitas = citasCompletas;
-        renderizarPaginacion();
+        paginas = Math.ceil(totalCitas.length / limite);
+        renderCitas();
+        cargarItemPaginacion();
       }
     }
   } catch (error) {
@@ -407,49 +411,40 @@ function colorearEstadoCita(estadoCitaTd) {
   }
 }
 
-//Funcion para paginacion de listado
-function renderizarPaginacion() {
-  // Calcular total de páginas
-  const totalPaginas = Math.ceil(totalCitas.length / citasPorPagina);
-  
-  // Calcular índices de inicio y fin
-  const inicio = (paginaActual - 1) * citasPorPagina;
-  const fin = inicio + citasPorPagina;
-  
-  // Obtener citas de la página actual
-  const citasPagina = totalCitas.slice(inicio, fin);
-  
-  // Renderizar tabla
+//Funcion para renderizar citas de la página activa
+function renderCitas() {
   const cuerpoTablaCitas = document.getElementById("datos-citas");
   cuerpoTablaCitas.innerHTML = "";
-  
+
+  const citasPagina = totalCitas.slice(desde, desde + limite);
+
   citasPagina.forEach((cita) => {
     const fila = document.createElement("tr");
     fila.innerHTML = `
-      <td>${cita.codigo_cita}</td>        
-      <td>${cita.nombre_sede}</td>
-      <td>${cita.medico_nombre} ${cita.medico_apellidos}</td>
-      <td>${cita.paciente_nombre} ${cita.paciente_apellido}</td>
-      <td>${formatearFecha(cita.fecha)}</td>
-      <td>${formatearHora12(cita.hora)}</td>
-      <td class="estado-cita">${cita.estado_cita}</td>
-      <td class="cancelCita-btn">
+      <td data-label="Código">${cita.codigo_cita}</td>        
+      <td data-label="Sede">${cita.nombre_sede}</td>
+      <td data-label="Médico">${cita.medico_nombre} ${cita.medico_apellidos}</td>
+      <td data-label="Paciente">${cita.paciente_nombre} ${cita.paciente_apellido}</td>
+      <td data-label="Fecha">${formatearFecha(cita.fecha)}</td>
+      <td data-label="Hora">${formatearHora12(cita.hora)}</td>
+      <td class="estado-cita" data-label="Estado">${cita.estado_cita}</td>
+      <td class="cancelCita-btn" data-label="Cancelar">
         <img src="../assets/icons/cancelar.png" alt="icon cancelar cita">
       </td>
     `;
     cuerpoTablaCitas.appendChild(fila);
-    
+
     // Colorear el estado de la cita
     const estadoCitaTd = fila.querySelector(".estado-cita");
     colorearEstadoCita(estadoCitaTd);
-    
+
     // Ocultar la imagen si el estado es "Cancelada"
     if (cita.estado_cita === "Cancelada" || cita.estado_cita === "Confirmada" || cita.estado_cita === "Asistida" || cita.estado_cita === "No asistida") {
       const cancelBtn = fila.querySelector(".cancelCita-btn");
       cancelBtn.style.visibility = "hidden";
       cancelBtn.style.pointerEvents = "none";
     }
-    
+
     // Agregar evento al boton de cancelar
     const cancelBtn = fila.querySelector(".cancelCita-btn");
     if (cancelBtn && cita.estado_cita !== "Cancelada") {
@@ -489,63 +484,60 @@ function renderizarPaginacion() {
       });
     }
   });
-  
-  // Renderizar controles de paginación
-  const paginacionDiv = document.getElementById("pagination-controls");
-  if (paginacionDiv) {
-    paginacionDiv.innerHTML = "";
-    
-    // Boton anterior
-    const btnAnterior = document.createElement("button");
-    btnAnterior.textContent = "← Anterior";
-    btnAnterior.disabled = paginaActual === 1;
-    btnAnterior.addEventListener("click", () => {
-      if (paginaActual > 1) {
-        paginaActual--;
-        renderizarPaginacion();
-      }
-    });
-    paginacionDiv.appendChild(btnAnterior);
-    
-    // Numeros de página
-    for (let i = 1; i <= totalPaginas; i++) {
-      const btnPagina = document.createElement("button");
-      btnPagina.textContent = i;
-      btnPagina.classList.add("page-number");
-      if (i === paginaActual) {
-        btnPagina.classList.add("active");
-      }
-      btnPagina.addEventListener("click", () => {
-        paginaActual = i;
-        renderizarPaginacion();
-      });
-      paginacionDiv.appendChild(btnPagina);
-    }
-    
-    // Boton siguiente
-    const btnSiguiente = document.createElement("button");
-    btnSiguiente.textContent = "Siguiente →";
-    btnSiguiente.disabled = paginaActual === totalPaginas;
-    btnSiguiente.addEventListener("click", () => {
-      if (paginaActual < totalPaginas) {
-        paginaActual++;
-        renderizarPaginacion();
-      }
-    });
-    paginacionDiv.appendChild(btnSiguiente);
+}
+
+// Genera botones numerados de paginación
+function cargarItemPaginacion() {
+  const contenedorPaginacion = document.getElementById("pages");
+  contenedorPaginacion.innerHTML = "";
+
+  for (let index = 0; index < paginas; index++) {
+    const btn = document.createElement("button");
+    btn.className = `page-btn ${paginaActiva === index + 1 ? "active" : ""}`;
+    btn.textContent = index + 1;
+    btn.addEventListener("click", () => pasarPagina(index));
+    contenedorPaginacion.appendChild(btn);
   }
 }
 
+window.pasarPagina = (paginaIndex) => {
+  paginaActiva = paginaIndex + 1;
+  desde = limite * paginaIndex;
+  renderCitas();
+  cargarItemPaginacion();
+};
+
+window.nextPage = () => {
+  if (paginaActiva < paginas) {
+    paginaActiva++;
+    desde += limite;
+    renderCitas();
+    cargarItemPaginacion();
+  }
+};
+
+window.previusPage = () => {
+  if (paginaActiva > 1) {
+    paginaActiva--;
+    desde -= limite;
+    renderCitas();
+    cargarItemPaginacion();
+  }
+};
+
 // Funcion asincrona para obtener citas registradas desde BD
 async function obtenerCitas() {
-  paginaActual = 1;
+  desde = 0;
+  paginaActiva = 1;
   try {
     const response = await fetch("http://localhost:9000/citas");
     if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
     citasCompletas = await response.json(); // Guardar citas originales
     totalCitas = citasCompletas; // Mostrar todas
+    paginas = Math.ceil(totalCitas.length / limite);
     console.log("Citas obtenidas:", totalCitas);
-    renderizarPaginacion();
+    renderCitas();
+    cargarItemPaginacion();
   } catch (error) {
     console.error("Error al obtener citas:", error);
   }
@@ -559,12 +551,12 @@ backBtn.addEventListener("click", () => {
 const searchInput = document.getElementById("searchInput-consult");
 searchInput.addEventListener("input", () => {
   const filtro = searchInput.value.toLowerCase();
-  
-  // Filtrar SIEMPRE desde citasCompletas (originales)
-  if (filtro === "") {
-    totalCitas = citasCompletas; // Sin filtro, mostrar todas
+  const pagingContainer = document.getElementById("paging");
+
+  if (filtro === "" || filtro.length < 5) {
+    totalCitas = citasCompletas;
   } else {
-    totalCitas = citasCompletas.filter(cita => 
+    totalCitas = citasCompletas.filter(cita =>
       cita.codigo_cita.toLowerCase().includes(filtro) ||
       cita.medico_nombre.toLowerCase().includes(filtro) ||
       cita.medico_apellidos.toLowerCase().includes(filtro) ||
@@ -576,10 +568,29 @@ searchInput.addEventListener("input", () => {
       cita.estado_cita.toLowerCase().includes(filtro)
     );
   }
-  
-  paginaActual = 1; // Reiniciar a la primera página
-  renderizarPaginacion();
+
+  desde = 0;
+  paginaActiva = 1;
+  paginas = Math.ceil(totalCitas.length / limite);
+  renderCitas();
+  cargarItemPaginacion();
+  pagingContainer.classList.remove("hidden");
 });
+
+const prevBtn = document.querySelector("#previous-btn button");
+const nextBtn2 = document.querySelector("#next-page button");
+
+if (prevBtn) {
+  prevBtn.addEventListener("click", () => {
+    previusPage();
+  });
+}
+
+if (nextBtn2) {
+  nextBtn2.addEventListener("click", () => {
+    nextPage();
+  });
+}
 
 const consultCitaMenu = document.getElementById("consult-menu");
 const consultCitasBtn = document.getElementById("consult-cita");
@@ -598,5 +609,6 @@ consultCitasBtn.addEventListener("click", () => {
     
     const selectMenu = document.getElementById("select-menu");
     selectMenu.style.display = "none";
+    verificarEstadoCitas();
     obtenerCitas();
 });

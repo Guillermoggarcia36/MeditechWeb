@@ -79,6 +79,6 @@ routes.post("/insumos", (req, res) => {
       res.json(rows);
     });
   });
-});
+}); 
 
 module.exports = routes;
