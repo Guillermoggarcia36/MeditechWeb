@@ -396,8 +396,12 @@ window.previusPage = () => {
 async function cargarTodo() {
   try {
     const [medicamentos, insumos] = await Promise.all([
-      fetch(API_MEDICAMENTOS).then((r) => r.json()),
-      fetch(API_INSUMOS).then((r) => r.json()),
+      fetch(API_MEDICAMENTOS, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    }).then((r) => r.json()),
+      fetch(API_INSUMOS, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    }).then((r) => r.json()),
     ]);
 
     todosLosMedicamentos = medicamentos;
@@ -553,7 +557,9 @@ inventarioBody.addEventListener("click", (e) => {
         try {
           const response = await fetch(API_MEDICAMENTOS, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"), 
+              "Content-Type": "application/json" },
             body: JSON.stringify({ id_medicamento: item.id_medicamento, estado_item: "Inactivo" }),
           });
           if (response.ok) cargarTodo();
@@ -609,7 +615,10 @@ inventarioBody.addEventListener("click", (e) => {
         try {
           const response = await fetch(API_INSUMOS, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token")
+            },
             body: JSON.stringify({ id_insumo: item.id_insumo, estado_item: "Inactivo" }),
           });
           if (response.ok) cargarTodo();
@@ -857,7 +866,10 @@ addItemForm.addEventListener("submit", async (e) => {
   try {
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
       body: JSON.stringify(data),
     });
     console.log("Respuesta del servidor:", response);
@@ -923,7 +935,10 @@ guardarCambiosBtn.addEventListener("click", async () => {
   try {
     const response = await fetch(url, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
       body: JSON.stringify(data),
     });
 

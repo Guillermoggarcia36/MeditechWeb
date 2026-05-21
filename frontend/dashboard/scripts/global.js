@@ -1,47 +1,47 @@
-    /* Loader: oculta la pantalla de carga cuando la página termine de cargar */
-    function hideLoader() {
-        const loader = document.getElementById('loader-container');
-        if (!loader) return;
-        loader.classList.remove('loader-active');
-        loader.classList.add('loader-inactive');
-        setTimeout(() => {
-            if (loader.parentNode) loader.parentNode.removeChild(loader);
-        }, 600);
-    }
+/* Loader: oculta la pantalla de carga cuando la página termine de cargar */
+function hideLoader() {
+    const loader = document.getElementById('loader-container');
+    if (!loader) return;
+    loader.classList.remove('loader-active');
+    loader.classList.add('loader-inactive');
+    setTimeout(() => {
+        if (loader.parentNode) loader.parentNode.removeChild(loader);
+    }, 600);
+}
 
-    // Oculta el loader cuando se cargue el contenido completo
-    document.addEventListener('DOMContentLoaded', () => {
-        // Por si acaso el recurso tarda, garantizamos que se intente ocultar al cargar DOM
-        setTimeout(hideLoader, 800);
-    });
-    window.addEventListener('load', hideLoader);
+// Oculta el loader cuando se cargue el contenido completo
+document.addEventListener('DOMContentLoaded', () => {
+    // Por si acaso el recurso tarda, garantizamos que se intente ocultar al cargar DOM
+    setTimeout(hideLoader, 800);
+});
+window.addEventListener('load', hideLoader);
 
-    function actualizarFechaHora() {
-        const ahora = new Date();
+function actualizarFechaHora() {
+    const ahora = new Date();
 
-        const opcionesHora = {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        };
-        const hora = ahora.toLocaleTimeString('es-ES', opcionesHora);
+    const opcionesHora = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    };
+    const hora = ahora.toLocaleTimeString('es-ES', opcionesHora);
 
-        const opcionesFecha = {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        };
-        const fecha = ahora.toLocaleDateString('es-ES', opcionesFecha);
+    const opcionesFecha = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    };
+    const fecha = ahora.toLocaleDateString('es-ES', opcionesFecha);
 
-        document.getElementById("date").textContent = fecha;
+    document.getElementById("date").textContent = fecha;
 
-        const horaElemento = document.getElementById("time");
-        horaElemento.textContent = hora;
+    const horaElemento = document.getElementById("time");
+    horaElemento.textContent = hora;
 
-        horaElemento.style.animation = "none"; 
-        void horaElemento.offsetWidth;
-        horaElemento.style.animation = "FadeIn 0.6s ease-in";
-    }
+    horaElemento.style.animation = "none"; 
+    void horaElemento.offsetWidth;
+    horaElemento.style.animation = "FadeIn 0.6s ease-in";
+}
 
 setInterval(actualizarFechaHora, 1000);
 actualizarFechaHora();
@@ -160,7 +160,7 @@ window.fetch = function(...args) {
         .then(response => {
             // Si la respuesta es 401 (no autorizado), cerrar sesión
             if (response.status === 401) {
-                console.error('⛔ Error 401: No autorizado. Cerrando sesión...');
+                console.error('Error 401: No autorizado. Cerrando sesión...');
                 
                 // Limpiar localStorage
                 localStorage.removeItem('token');
@@ -180,7 +180,7 @@ window.fetch = function(...args) {
                 // Mostrar alerta
                 Swal.fire({
                     title: 'Sesión No Válida',
-                    text: 'Tu sesión ha expirado o no es válida. Por favor, inicia sesión nuevamente.',
+                    text: 'Por motivos de seguridad, tu sesión ha sido cerrada. Por favor, inicia sesión nuevamente.',
                     icon: 'error',
                     allowOutsideClick: false,
                     allowEscapeKey: false,

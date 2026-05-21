@@ -1,7 +1,10 @@
 const express = require('express');
 const routes = express.Router();
+const { verificarToken, verificarRol } = require("../middleware/authMiddleware");
 
-routes.get("/", (req, res) => {
+routes.use(verificarToken, verificarRol([1, 2]));
+
+routes.get("/", verificarToken, verificarRol([1, 2]), (req, res) => {
   const { id_historialFK } = req.query;
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
@@ -16,7 +19,7 @@ routes.get("/", (req, res) => {
   });
 });
 
-routes.post("/", (req, res) => {
+routes.post("/", verificarToken, verificarRol([1, 2]), (req, res) => {
   const { id_historialFK, fecha_consulta, motivo_consulta, descripcion_consulta, diagnostico, observaciones } = req.body;
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json(err);

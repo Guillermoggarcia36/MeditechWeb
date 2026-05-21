@@ -1,5 +1,7 @@
 // Endpoints
+API_URL_CITAS = "http://localhost:9000/citas";
 API_URL_CONSULTASEDES = "http://localhost:9000/citas/sedes";
+API_URL_MEDICOS = "http://localhost:9000/users/medicos";
 
 // Variables de paginación
 let totalCitas = [];
@@ -11,6 +13,7 @@ let paginaActiva = 1;
 
 const nombrePaciente = localStorage.getItem("nameUser") + " " + localStorage.getItem("apellidoUser");
 const idPaciente = localStorage.getItem("idUsuario");
+console.log(idPaciente);
 
 // Variable de seleccion de cita para envio a BD
 let datosCita = {
@@ -88,7 +91,13 @@ async function cargarSedes() {
   cuerpoSedes.innerHTML = "";
 
   try {
-    const response = await fetch(API_URL_CONSULTASEDES);
+    const response = await fetch(API_URL_CONSULTASEDES, {
+      method: "GET",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+    });
     if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
     const sedes = await response.json();
 
@@ -105,6 +114,8 @@ async function cargarSedes() {
       btn.innerHTML = `
         <img src="../assets/icons/sedes.png" alt="icon sede">
         <p>${sede.nombre_sede}</p>
+        <p>/</p>
+        <p class="direccion-sede">${sede.direccion}</p>
       `;
 
       // al hacer click almacenamos el objeto sede en datosCita
@@ -138,7 +149,13 @@ async function cargarMedicos() {
   cuerpoMedicos.innerHTML = "";
   inputCita.placeholder = "Buscar medico por nombre";
   try {
-    const response = await fetch("http://localhost:9000/users/medicos");
+    const response = await fetch(API_URL_MEDICOS, {
+      method: "GET",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+    });
     if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
     const medicos = await response.json();
     // vaciamos y creamos botones
@@ -247,10 +264,13 @@ nextBtn.addEventListener("click", () => {
 
     nextBtn.addEventListener("click", () => {
       console.log("Datos cita a enviar:", datosCita);
-      fetch("http://localhost:9000/citas", 
+      fetch(API_URL_CITAS, 
         {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        },
         body: JSON.stringify(datosCita)
         })
         .then((response) => { {
@@ -314,7 +334,13 @@ function validacionSeleccion() {
 
 async function verificarEstadoCitas() {
   try {
-    const response = await fetch("http://localhost:9000/citas");
+    const response = await fetch(API_URL_CITAS, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    });
     if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
     const citas = await response.json();
     
@@ -332,9 +358,12 @@ async function verificarEstadoCitas() {
       
       if (citaPasada && cita.estado_cita === "Pendiente") {
         console.log(`Cita ${cita.id_cita} está caducada. Actualizando a "Sin asistencia"...`);
-        const updateResponse = await fetch("http://localhost:9000/citas/sin-asistencia", {
+        const updateResponse = await fetch(`${API_URL_CITAS}/sin-asistencia`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+          },
           body: JSON.stringify({ id_cita: cita.id_cita })
         });
         
@@ -350,7 +379,13 @@ async function verificarEstadoCitas() {
     
     if (citasActualizadas) {
       console.log("Refrescando lista de citas...");
-      const response = await fetch("http://localhost:9000/citas");
+      const response = await fetch(API_URL_CITAS, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+      });
       if (response.ok) {
         citasCompletas = await response.json();
         totalCitas = citasCompletas;
@@ -461,9 +496,12 @@ function renderCitas() {
         }).then((result) => {
           if (result.isConfirmed) {
             try {
-              const response = fetch("http://localhost:9000/citas/cancelar", {
+              const response = fetch(`${API_URL_CITAS}/cancelar`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + localStorage.getItem("token")
+                },
                 body: JSON.stringify({ id_cita: cita.id_cita })
               });
               if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
@@ -530,7 +568,13 @@ async function obtenerCitas() {
   desde = 0;
   paginaActiva = 1;
   try {
-    const response = await fetch("http://localhost:9000/citas");
+    const response = await fetch(API_URL_CITAS, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    });
     if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
     citasCompletas = await response.json(); // Guardar citas originales
     totalCitas = citasCompletas; // Mostrar todas

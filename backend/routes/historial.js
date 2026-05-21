@@ -1,7 +1,10 @@
 const express = require('express');
 const routes = express.Router();
+const { verificarToken, verificarRol } = require('../middleware/authMiddleware');
 
-routes.get('/', (req, res) => {
+routes.use(verificarToken, verificarRol([1, 2]));
+
+routes.get('/', verificarToken, verificarRol([1, 2]), (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
         conn.query(
@@ -14,7 +17,7 @@ routes.get('/', (req, res) => {
     });
 });
 
-routes.get("/consultas", (req, res) => {
+routes.get("/consultas", verificarToken, verificarRol([1, 2]), (req, res) => {
   const { id_historialFK } = req.query;
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
@@ -29,7 +32,7 @@ routes.get("/consultas", (req, res) => {
   });
 });
 
-routes.get('/procedimientos', (req, res) => {
+routes.get('/procedimientos', verificarToken, verificarRol([1, 2]), (req, res) => {
     const { id_historialFK } = req.query;
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
@@ -44,7 +47,7 @@ routes.get('/procedimientos', (req, res) => {
     });
 });
 
-routes.post('/', (req, res) => {
+routes.post('/', verificarToken, verificarRol([1, 2]), (req, res) => {
     const { id_pacienteFK, fecha_registro, peso_paciente, altura_paciente, fecha_nacimiento, sexo, grupo_sanguineo, antecedentes_personales, antecedentes_familiares, procedimientos_quirurgicos, descripcion_general, estado_clinico } = req.body;
 
     req.getConnection((err, conn) => {
@@ -74,7 +77,7 @@ routes.post('/', (req, res) => {
     });
 });
 
-routes.put('/', (req, res) => {
+routes.put('/', verificarToken, verificarRol([1, 2]), (req, res) => {
     const { estado_clinico, id_historial } = req.body;
 
     req.getConnection((err, conn) => {

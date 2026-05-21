@@ -1,7 +1,10 @@
 const express = require('express');
 const routes = express.Router();
+const { verificarToken, verificarRol } = require('../middleware/authMiddleware');
 
-routes.get('/medicamentos', (req, res) => {
+routes.use(verificarToken, verificarRol([1, 4]));
+
+routes.get('/medicamentos', verificarToken, verificarRol([1, 4]), (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
         conn.query('SELECT * FROM medicamentos', (err, rows) => {
@@ -11,7 +14,7 @@ routes.get('/medicamentos', (req, res) => {
     });
 });
 
-routes.get("/insumos", (req, res) => {
+routes.get("/insumos", verificarToken, verificarRol([1, 4]), (req, res) => {
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
     conn.query("SELECT * FROM insumos", (err, rows) => {
@@ -21,7 +24,7 @@ routes.get("/insumos", (req, res) => {
   });
 });
 
-routes.post("/medicamentos", (req, res) => {
+routes.post("/medicamentos", verificarToken, verificarRol([1, 4]), (req, res) => {
   const data = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
@@ -32,7 +35,7 @@ routes.post("/medicamentos", (req, res) => {
   });
 });
 
-routes.put("/insumos", (req, res) => {
+routes.put("/insumos", verificarToken, verificarRol([1, 4]), (req, res) => {
   const { id_insumo, ...resto } = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
@@ -51,7 +54,7 @@ routes.put("/insumos", (req, res) => {
   });
 });
 
-routes.put("/medicamentos", (req, res) => {
+routes.put("/medicamentos", verificarToken, verificarRol([1, 4]), (req, res) => {
   const { id_medicamento, ...resto } = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
@@ -70,7 +73,7 @@ routes.put("/medicamentos", (req, res) => {
   });
 });
 
-routes.post("/insumos", (req, res) => {
+routes.post("/insumos", verificarToken, verificarRol([1, 4]), (req, res) => {
   const data = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.send(err);

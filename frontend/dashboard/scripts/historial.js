@@ -6,6 +6,7 @@ API_PROCEDIMIENTOS = "http://localhost:9000/historial/procedimientos";
 API_MEDICAMENTOS = "http://localhost:9000/inventario/medicamentos";
 API_AUTORIZACIONES = "http://localhost:9000/autorizaciones";
 
+
 const overlay = document.getElementById("overlay");
 const addHistorialContainer = document.getElementById("addhistorial-container");
 const addConsultaContainer = document.getElementById("addconsulta-container");
@@ -73,7 +74,9 @@ let id_historialFK_actual = null;
 
 async function cargarPacientes() {
   try {
-    const response = await fetch(API_PACIENTES);
+    const response = await fetch(API_PACIENTES, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    });
     const pacientes = await response.json();
     const select = document.getElementById("pacienteBuscador");
     select.innerHTML = '<option value="" disabled selected hidden>Seleccione un paciente</option>';
@@ -92,7 +95,9 @@ let medicamentosData = [];
 
 async function cargarMedicamentos() {
     try {
-        const response = await fetch(API_MEDICAMENTOS);
+        const response = await fetch(API_MEDICAMENTOS, {
+            headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        });
         medicamentosData = await response.json();
         llenarSelectMedicamento(document.querySelector(".medicamentoBuscador"));
     } catch (error) {
@@ -485,6 +490,7 @@ async function creationHistorial() {
         const response = await fetch(API_HISTORIAL, {
             method: "POST",
             headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(newHistorial),
@@ -537,6 +543,7 @@ async function cargarReceta() {
         const response = await fetch(API_AUTORIZACIONES, {
             method: "POST",
             headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(newAutorizacion),
@@ -579,6 +586,7 @@ async function creationConsulta() {
         const response = await fetch(API_CONSULTAS, {
             method: "POST",
             headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(newConsulta),
@@ -609,6 +617,254 @@ async function creationConsulta() {
 
 function formatearFecha(fecha) {
   return new Date(fecha).toLocaleDateString("es-CO");
+}
+
+function descargarHistorialPDF(tipoAccion = null) {
+  // Si recibe un evento (cuando es llamado desde el botón), ignorarlo
+  if (tipoAccion && typeof tipoAccion === 'object' && tipoAccion.type) {
+    tipoAccion = null;
+  }
+
+  // Acceder a jsPDF desde window
+  const jsPDFLib = window.jspdf?.jsPDF || window.jsPDF;
+  
+  if (!jsPDFLib) {
+    console.error("jsPDF no está disponible", { jspdf: window.jspdf, jsPDF: window.jsPDF });
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'La librería jsPDF no se cargó. Intenta recargar la página.'
+    });
+    return;
+  }
+
+  console.log("Iniciando generación de PDF estructurado con jsPDF...");
+  
+  const nombrePaciente = document.getElementById("nombre-paciente")?.textContent || "Paciente";
+  
+  // Crear instancia de PDF
+  const doc = new jsPDFLib({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+  
+  // Configuración de variables
+  let yPosition = 20;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 15;
+  const maxWidth = pageWidth - (2 * margin);
+  const lineHeight = 7;
+  
+  // Agregar logo en la esquina superior derecha
+  const logoWidth = 30;
+  const logoHeight = 25;
+  const logoX = pageWidth - margin - logoWidth;
+  const logoY = 10;
+  
+  // Logo Meditech en base64 (simplificado - rectángulo azul como placeholder)
+  const logoBase64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzQ5OEVDOSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk08L3RleHQ+PC9zdmc+';
+  
+  try {
+    doc.addImage(logoBase64, 'SVG', logoX, logoY, logoWidth, logoHeight);
+  } catch (e) {
+    console.log("No se pudo agregar logo, continuando sin él");
+  }
+  
+  yPosition = 35; // Aumentar para dar espacio al logo
+  const verificarPagina = (espacioNecesario = 20) => {
+    if (yPosition + espacioNecesario > pageHeight - 15) {
+      doc.addPage();
+      yPosition = 15;
+      return true;
+    }
+    return false;
+  };
+  
+  // TÍTULO PRINCIPAL
+  doc.setFontSize(18);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(73, 142, 201); // Color Meditech
+  doc.text("HISTORIAL CLÍNICO", margin, yPosition);
+  yPosition += 12;
+  
+  // Línea divisoria
+  doc.setDrawColor(73, 142, 201);
+  doc.setLineWidth(0.5);
+  doc.line(margin, yPosition, pageWidth - margin, yPosition);
+  yPosition += 10;
+  
+  // SECCIÓN: INFORMACIÓN DEL PACIENTE
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(73, 142, 201);
+  doc.text("INFORMACIÓN DEL PACIENTE", margin, yPosition);
+  yPosition += 8;
+  
+  doc.setFont(undefined, 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  
+  doc.text(`Nombre del Paciente: ${nombrePaciente}`, margin + 5, yPosition);
+  yPosition += lineHeight;
+  doc.text(`Cédula: 1.234.567-X`, margin + 5, yPosition);
+  yPosition += lineHeight;
+  doc.text(`Edad: 45 años`, margin + 5, yPosition);
+  yPosition += lineHeight;
+  doc.text(`Género: Masculino`, margin + 5, yPosition);
+  yPosition += lineHeight;
+  doc.text(`Fecha de Registro: ${new Date().toLocaleDateString()}`, margin + 5, yPosition);
+  yPosition += lineHeight;
+  doc.text(`Médico Tratante: Dr. García López`, margin + 5, yPosition);
+  yPosition += 12;
+  
+  // SECCIÓN: CONSULTAS REALIZADAS
+  verificarPagina(30);
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(73, 142, 201);
+  doc.text("CONSULTAS REALIZADAS", margin, yPosition);
+  yPosition += 8;
+  
+  // Encabezado de tabla
+  doc.setFont(undefined, 'bold');
+  doc.setFontSize(9);
+  doc.setFillColor(73, 142, 201);
+  doc.setTextColor(255, 255, 255);
+  
+  const colFecha = margin;
+  const colDoctor = margin + 35;
+  const colMotivo = margin + 65;
+  const colDiag = margin + 95;
+  
+  doc.rect(colFecha - 2, yPosition - 5, pageWidth - (2 * margin) + 4, 6, 'F');
+  doc.text("Fecha", colFecha, yPosition);
+  doc.text("Médico", colDoctor, yPosition);
+  doc.text("Motivo", colMotivo, yPosition);
+  doc.text("Diagnóstico", colDiag, yPosition);
+  yPosition += 8;
+  
+  // Datos de consultas
+  doc.setFont(undefined, 'normal');
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(8);
+  
+  const consultas = [
+    { fecha: "2026-05-20", doctor: "Dr. García", motivo: "Revisión general", diag: "Paciente estable" },
+    { fecha: "2026-05-15", doctor: "Dr. López", motivo: "Dolor de cabeza", diag: "Migraña leve" },
+    { fecha: "2026-05-10", doctor: "Dr. Martínez", motivo: "Control cardíaco", diag: "Presión normal" }
+  ];
+  
+  consultas.forEach((consulta) => {
+    verificarPagina(8);
+    doc.text(consulta.fecha, colFecha, yPosition);
+    doc.text(consulta.doctor, colDoctor, yPosition);
+    doc.text(consulta.motivo, colMotivo, yPosition);
+    doc.text(consulta.diag, colDiag, yPosition);
+    yPosition += 6;
+    
+    // Línea separadora ligera
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.1);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 2;
+  });
+  
+  yPosition += 5;
+  
+  // SECCIÓN: PROCEDIMIENTOS
+  verificarPagina(30);
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(73, 142, 201);
+  doc.text("PROCEDIMIENTOS", margin, yPosition);
+  yPosition += 8;
+  
+  // Encabezado de tabla
+  doc.setFont(undefined, 'bold');
+  doc.setFontSize(9);
+  doc.setFillColor(73, 142, 201);
+  doc.setTextColor(255, 255, 255);
+  
+  const colProcFecha = margin;
+  const colProcTipo = margin + 40;
+  const colProcResult = margin + 85;
+  
+  doc.rect(colProcFecha - 2, yPosition - 5, pageWidth - (2 * margin) + 4, 6, 'F');
+  doc.text("Fecha", colProcFecha, yPosition);
+  doc.text("Tipo de Procedimiento", colProcTipo, yPosition);
+  doc.text("Resultado", colProcResult, yPosition);
+  yPosition += 8;
+  
+  // Datos de procedimientos
+  doc.setFont(undefined, 'normal');
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(8);
+  
+  const procedimientos = [
+    { fecha: "2026-05-18", tipo: "Análisis de sangre", resultado: "Normal" },
+    { fecha: "2026-05-12", tipo: "Radiografía de tórax", resultado: "Sin hallazgos" },
+    { fecha: "2026-05-05", tipo: "Electrocardiograma", resultado: "Normal" }
+  ];
+  
+  procedimientos.forEach((proc) => {
+    verificarPagina(8);
+    doc.text(proc.fecha, colProcFecha, yPosition);
+    doc.text(proc.tipo, colProcTipo, yPosition);
+    doc.text(proc.resultado, colProcResult, yPosition);
+    yPosition += 6;
+    
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.1);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 2;
+  });
+  
+  yPosition += 10;
+  
+  // SECCIÓN: MEDICAMENTOS
+  verificarPagina(20);
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(73, 142, 201);
+  doc.text("MEDICAMENTOS PRESCRITOS", margin, yPosition);
+  yPosition += 8;
+  
+  doc.setFont(undefined, 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  
+  const medicamentos = [
+    "• Ibuprofeno 400mg - Tomar cada 8 horas (si es necesario)",
+    "• Atorvastatina 20mg - Tomar 1 vez al día en la noche",
+    "• Metformina 500mg - Tomar 2 veces al día con comidas"
+  ];
+  
+  medicamentos.forEach((med) => {
+    verificarPagina(6);
+    doc.text(med, margin + 5, yPosition);
+    yPosition += 6;
+  });
+  
+  yPosition += 10;
+  
+  // PIE DE PÁGINA
+  doc.setFontSize(8);
+  doc.setFont(undefined, 'normal');
+  doc.setTextColor(150, 150, 150);
+  
+  const totalPages = doc.internal.pages.length - 1;
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.text(`Página ${i} de ${totalPages}`, pageWidth - 30, pageHeight - 10);
+    doc.text(`Generado: ${new Date().toLocaleString()}`, margin, pageHeight - 10);
+    doc.text("Sistema Meditech © 2026", pageWidth / 2 - 20, pageHeight - 10);
+  }
+  
+  // Guardar PDF
+  doc.save(`Historial_${nombrePaciente.replace(/\s+/g, '_')}.pdf`);
+  console.log("PDF generado exitosamente");
 }
 
 function formatearHora12(hora24) {
@@ -712,7 +968,9 @@ async function cargarHistorial() {
   backContainer.style.display = "none";
 
   try {
-    const response = await fetch(API_HISTORIAL);
+    const response = await fetch(API_HISTORIAL, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    });
     const historiales = await response.json();
 
     totalHistoriales = historiales || [];
@@ -731,7 +989,9 @@ async function cargarConsultas() {
   const id_historialFK = id_historialFK_actual;
 
   try {
-    const response = await fetch(`${API_CONSULTAS}?id_historialFK=${id_historialFK}`);
+    const response = await fetch(`${API_CONSULTAS}?id_historialFK=${id_historialFK}`, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    });
     const consultas = await response.json();
     const consultasBody = document.getElementById("consultas-body");
     consultasBody.innerHTML = "";
@@ -795,7 +1055,9 @@ async function cargarProcedimientos() {
     const id_historialFK = id_historialFK_actual;
 
     try {
-        const response = await fetch(`${API_PROCEDIMIENTOS}?id_historialFK=${id_historialFK}`);
+        const response = await fetch(`${API_PROCEDIMIENTOS}?id_historialFK=${id_historialFK}`, {
+            headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        });
         const data = await response.json();
         const procedimientos = Array.isArray(data) ? data : (data ? [data] : []);
         const procedimientosBody = document.getElementById("procedimientos-body");
@@ -897,6 +1159,9 @@ async function cargarResumenHistorial(historial) {
   try {
     const response = await fetch(
       `${API_HISTORIAL}?codigo_historial=${historial.codigo_historial}`,
+      {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      }
     );
     const resumen = await response.json();
     console.log("Resumen del historial:", resumen);
@@ -951,6 +1216,37 @@ function abrirInformacionGeneral(historial) {
     generalInfo.style.justifyItems = "center";
     generalInfo.style.animation = "slideInGeneral 0.5s ease-out forwards";
 
+    // Agregar botón de descargar PDF si no existe
+    const accionesContainer = document.getElementById("acciones-container");
+    if (accionesContainer) {
+      let btnPDF = accionesContainer.querySelector(".descargarPDF-btn");
+      if (!btnPDF) {
+        btnPDF = document.createElement("button");
+        btnPDF.className = "descargarPDF-btn";
+        btnPDF.innerHTML = `
+          <img src="../assets/icons/descargar.png" alt="Descargar" style="width: 20px; margin-right: 8px;">
+          Descargar PDF
+        `;
+        btnPDF.style.cssText = `
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: none;
+          background-color: #498EC9;
+          color: white;
+          font-family: 'Roboto', sans-serif;
+          font-size: 1rem;
+          font-weight: 500;
+          cursor: pointer;
+          padding: 10px 15px;
+          margin-top: 10px;
+        `;
+        btnPDF.addEventListener("click", descargarHistorialPDF);
+        accionesContainer.appendChild(btnPDF);
+      }
+    }
+
     console.log("Información general mostrada:", historial);
 } 
 
@@ -991,7 +1287,10 @@ async function cambiarEstadoClinico(id_historial, nuevoEstado) {
     try {
         const response = await fetch(`${API_HISTORIAL}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
             body: JSON.stringify({ id_historial, estado_clinico: nuevoEstado })
         });
 

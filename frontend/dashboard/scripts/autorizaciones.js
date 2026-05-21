@@ -103,8 +103,21 @@ window.previusPage = () => {
 
 async function cargarAutorizaciones() {
   try {
-    const response = await fetch(API_AUTORIZACIONES);
+    const response = await fetch(API_AUTORIZACIONES, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    });
     const autorizaciones = await response.json();
+
+    // Verificar y actualizar autorizaciones vencidas (> 30 días)
+    for (const auth of autorizaciones) {
+      if (auth.estado_autorizacion.toLowerCase() === "pendiente") {
+        const diasTranscurridos = calcularDiasTranscurridos(auth.fecha_autorizacion);
+        if (diasTranscurridos > 30) {
+          await actualizarEstadoAutorizacion(auth.id_autorizacion, "Vencida");
+          auth.estado_autorizacion = "Vencida";
+        }
+      }
+    }
 
     totalAutorizaciones = autorizaciones;
     paginas = Math.ceil(totalAutorizaciones.length / limite);
@@ -127,6 +140,7 @@ async function cargarAutorizaciones() {
 }
 
 function colorearEstado(estado) {
+  if (!estado || typeof estado !== "string") return "gray";
   switch (estado.toLowerCase()) {
     case "aprobada":
       return "green";
@@ -134,8 +148,37 @@ function colorearEstado(estado) {
       return "orange";
     case "rechazada":
       return "red";
+    case "vencida":
+      return "#8B0000";
     default:
       return "gray";
+  }
+}
+
+// Calcula dias transcurridos desde la fecha de solicitud de autorizacion
+function calcularDiasTranscurridos(fechaSolicitud) {
+  const fecha = new Date(fechaSolicitud);
+  const ahora = new Date();
+  const diferencia = ahora - fecha;
+  return Math.floor(diferencia / (1000 * 60 * 60 * 24));
+}
+
+// Actualiza el estado de una autorización
+async function actualizarEstadoAutorizacion(id_autorizacion, nuevoEstado) {
+  try {
+    const response = await fetch(API_AUTORIZACIONES, {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({ id_autorizacion, estado_autorizacion: nuevoEstado })
+    });
+    if (!response.ok) {
+      throw new Error("Error al actualizar estado");
+    }
+  } catch (error) {
+    console.error(`Error al actualizar estado a ${nuevoEstado}:`, error);
   }
 }
 
@@ -143,7 +186,9 @@ async function actualizarStockMedicamento(id_medicamento, stock_disponible) {
   try {
     const response = await fetch(API_MEDICAMENTOS, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Authorization": "Bearer " + localStorage.getItem("token"),
+        "Content-Type": "application/json" },
       body: JSON.stringify({ id_medicamento, stock_disponible })
     });
     console.log("Respuesta al actualizar stock del medicamento:", response);
@@ -159,7 +204,10 @@ async function autorizarAutorizacion(id_autorizacion) {
     try {
       const response = await fetch(API_AUTORIZACIONES, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        },
         body: JSON.stringify({ id_autorizacion, estado_autorizacion: "Aprobada" })
       });
       if (response.ok) {
@@ -187,7 +235,10 @@ async function rechazarAutorizacion(id_autorizacion) {
     try {
       const response = await fetch(API_AUTORIZACIONES, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        },
         body: JSON.stringify({ id_autorizacion, estado_autorizacion: "Rechazada" })
       });
       if (response.ok) {
@@ -215,33 +266,47 @@ const autorizacionesBody = document.getElementById("autorizaciones-body");
 autorizacionesBody.addEventListener("click", async (event) => {
   if (event.target.classList.contains("btn-verDetalles")) {
     const id_autorizacion = event.target.dataset.id;
+
+    // Obtener datos básicos de la autorización desde el array ya cargado
+    const autorizacion = totalAutorizaciones.find(
+      (a) => String(a.id_autorizacion) === String(id_autorizacion)
+    );
+
     try {
       const response = await fetch(
         `${API_AUTORIZACIONES_MEDICAMENTOS}?id_autorizacionFK=${id_autorizacion}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+          }
+        }
       );
       const medicamentos = await response.json();
       console.log("Medicamentos obtenidos:", medicamentos);
 
-      const filasHtml = medicamentos
-        .map(
-          (med) => `
-        <tr>
-          <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid #e0e0e0;">${med.nombre_medicamento}</td>
-          <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid #e0e0e0; text-align:center;">${med.cantidad}</td>
-          <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid #e0e0e0; color:#555;">${med.notas || "—"}</td>
-        </tr>
-      `,
-        )
-        .join("");
+      const filasHtml = medicamentos.length > 0
+        ? medicamentos.map((med) => `
+          <tr>
+            <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid #e0e0e0;">${med.nombre_medicamento}</td>
+            <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid #e0e0e0; text-align:center;">${med.cantidad}</td>
+            <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid #e0e0e0; color:#555;">${med.notas || "—"}</td>
+          </tr>
+        `).join("")
+        : `<tr><td colspan="3" style="padding:1rem; text-align:center; color:#888;">No hay medicamentos registrados en esta autorización.</td></tr>`;
+
+      const estado = autorizacion?.estado_autorizacion?.toLowerCase();
+      const estaTerminada = estado === "aprobada" || estado === "rechazada" || estado === "vencida";
 
       Swal.fire({
-        title: `Detalle autorización <br>${medicamentos[0]?.codigo_autorizacion || ""}</br>`,
+        title: `Detalle autorización <br>${autorizacion?.codigo_autorizacion || ""}</br>`,
         html: `
         <div style="text-align:left; line-height:1.8;">
-          <p><strong>Paciente:</strong><br> ${medicamentos[0]?.paciente_nombre || ""} ${medicamentos[0]?.paciente_apellido || ""}</br></p>
-          <p><strong>Fecha de autorización:</strong><br> ${formatearFecha(medicamentos[0]?.fecha_autorizacion) || ""}</br></p>
-          <p><strong>Estado:</strong><br> <span style="color:${colorearEstado(medicamentos[0]?.estado_autorizacion)}; font-weight:600;">${medicamentos[0]?.estado_autorizacion || ""}</br></span></p>
-          <p><strong>Nota:</strong><br> ${medicamentos[0]?.nota || "—"}</br></p>
+          <p><strong>Paciente:</strong><br> ${autorizacion?.paciente_nombre || ""} ${autorizacion?.paciente_apellido || ""}</br></p>
+          <p><strong>Fecha de autorización:</strong><br> ${formatearFecha(autorizacion?.fecha_autorizacion) || ""}</br></p>
+          <p><strong>Estado:</strong><br> <span style="color:${colorearEstado(autorizacion?.estado_autorizacion)}; font-weight:600;">${autorizacion?.estado_autorizacion || ""}</br></span></p>
+          <p><strong>Nota:</strong><br> ${autorizacion?.nota || "—"}</br></p>
         </div>
           <div style="text-align:left;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
@@ -258,8 +323,8 @@ autorizacionesBody.addEventListener("click", async (event) => {
             </table>
           </div>
         `,
-        showConfirmButton: true,
-        showDenyButton: true,
+        showConfirmButton: !estaTerminada,
+        showDenyButton: !estaTerminada,
         showCancelButton: true,
         confirmButtonText:
           '<b><img src="../assets/icons/correcto.png" width="20" height="20" style="margin-right:8px">Autorizar</b>',
@@ -272,7 +337,7 @@ autorizacionesBody.addEventListener("click", async (event) => {
         width: "600px",
       });
       Swal.getConfirmButton().addEventListener("click", () => {
-        if (medicamentos[0]?.estado_autorizacion.toLowerCase() === "aprobada") {
+        if (autorizacion?.estado_autorizacion.toLowerCase() === "aprobada") {
           Swal.fire({
             title: "Esta autorización ya fue aprobada.",
             icon: "info",
@@ -280,7 +345,7 @@ autorizacionesBody.addEventListener("click", async (event) => {
           });
           return;
         }
-        else if (medicamentos[0]?.estado_autorizacion.toLowerCase() === "rechazada") {
+        else if (autorizacion?.estado_autorizacion.toLowerCase() === "rechazada") {
           Swal.fire({
             title: "Esta autorización ya fue rechazada.",
             icon: "info",
@@ -288,6 +353,38 @@ autorizacionesBody.addEventListener("click", async (event) => {
           });
           return;
         }
+        else if (autorizacion?.estado_autorizacion.toLowerCase() === "vencida") {
+          Swal.fire({
+            title: "Esta autorización ha vencido.",
+            text: "Las autorizaciones vencen después de 30 días.",
+            icon: "warning",
+            confirmButtonText: "Cerrar",
+          });
+          return;
+        }
+
+        // Validar inventario disponible
+        const medicamentosFaltantes = medicamentos.filter(med => med.stock_disponible < med.cantidad);
+        
+        if (medicamentosFaltantes.length > 0) {
+          const listaMedicamentos = medicamentosFaltantes
+            .map(med => `<li><strong>${med.nombre_medicamento}</strong> - Disponible: ${med.stock_disponible}, Requerido: ${med.cantidad}</li>`)
+            .join("");
+          
+          Swal.fire({
+            title: "Stock insuficiente",
+            html: `<div style="text-align:left;">
+              <p>No hay suficientes unidades en inventario para los siguientes medicamentos:</p>
+              <ul style="margin:10px 0;">${listaMedicamentos}</ul>
+              <p style="color:#e73c3c; font-weight:bold;">Por favor, verifica el inventario antes de autorizar.</p>
+            </div>`,
+            icon: "error",
+            confirmButtonText: "Entendido",
+            confirmButtonColor: "#498EC9"
+          });
+          return;
+        }
+
         Swal.fire({
           title: "¿Estás seguro de aprobar esta autorización?",
           icon: "warning",
@@ -305,7 +402,7 @@ autorizacionesBody.addEventListener("click", async (event) => {
         });
       });
       Swal.getDenyButton().addEventListener("click", () => {
-        if (medicamentos[0]?.estado_autorizacion.toLowerCase() === "aprobada") {
+        if (autorizacion?.estado_autorizacion.toLowerCase() === "aprobada") {
           Swal.fire({
             title: "Esta autorización ya fue aprobada y no puede ser rechazada.",
             icon: "info",
@@ -313,7 +410,7 @@ autorizacionesBody.addEventListener("click", async (event) => {
           });
           return;
         }
-        else if (medicamentos[0]?.estado_autorizacion.toLowerCase() === "rechazada") {
+        else if (autorizacion?.estado_autorizacion.toLowerCase() === "rechazada") {
           Swal.fire({
             title: "Esta autorización ya fue rechazada.",
             icon: "info",
@@ -321,7 +418,15 @@ autorizacionesBody.addEventListener("click", async (event) => {
           });
           return;
         }
-        // Aquí puedes agregar la lógica para rechazar la autorización
+        else if (autorizacion?.estado_autorizacion.toLowerCase() === "vencida") {
+          Swal.fire({
+            title: "Esta autorización ha vencido.",
+            text: "Las autorizaciones vencen después de 30 días.",
+            icon: "warning",
+            confirmButtonText: "Cerrar",
+          });
+          return;
+        }
         Swal.fire({
           title: "¿Estás seguro de rechazar esta autorización?",
           icon: "warning",

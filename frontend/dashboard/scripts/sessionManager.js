@@ -1,7 +1,7 @@
 // ✅ Gestor de sesión con inactividad y validación de token
 const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
 const WARNING_TIMEOUT = 4 * 60 * 1000; // 4 minutos (1 min antes de expirar)
-const VALIDATION_INTERVAL = 2 * 60 * 1000; // Validar token cada 2 minutos
+const VALIDATION_INTERVAL = 3 * 60 * 1000; // Validar token cada 5 minutos
 const VALIDATE_TOKEN_URL = "http://localhost:9000/users/validar-token";
 
 let inactivityTimer;

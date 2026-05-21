@@ -91,7 +91,7 @@ function verificarToken(req, res, next) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         
-        // ✅ VERIFICAR INACTIVIDAD
+        // Verificar inactividad
         const lastActivity = userActivity.get(decoded.id_usuario);
         const ahora = Date.now();
         

@@ -206,8 +206,10 @@ div {
 
 #sidebar-container {
     background-color: #498EC9;
-    padding-bottom: 75%;
+    min-height: calc(95vh - 80px);
+    align-self: stretch;
     border-radius: 0px 0px 0px 12px;
+    grid-area: sidebar;
 }
 
 #sidebar-container button {
@@ -253,12 +255,24 @@ div {
     grid-area: content-area;
 }
 
+#title-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #title-content h1 {
     font-family: 'Segoe UI', sans-serif;
-    font-weight: 400;
+    font-weight: 600;
     font-size: 2.1rem;
     padding-left: 4%;
     opacity: 80%;
+}
+
+#title-content img {
+    width: 40px; 
+    height: 40px; 
+    margin-left: 10px;
 }
 
 .content-container {
@@ -271,6 +285,24 @@ div {
     margin-left: 1%;
     margin-right: 1%;
     margin-bottom: 1%;
+}
+
+.widget-row {
+    display: flex;
+    gap: 24px;
+    margin: 32px 0;
+    justify-content: flex-start;
+}
+.widget-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(73,142,201,0.08);
+    padding: 24px 32px;
+    min-width: 340px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #search {
@@ -346,6 +378,10 @@ div {
     min-height: 50vh;
 }
 
+#tables thead {
+    background-color: #498EC9;
+}
+
 #tables td {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -364,6 +400,8 @@ div {
     cursor: pointer;
     background-color: rgba(128, 128, 128, 0.118);
     height: 6vh;
+    color: white;
+    font-weight: 500;
 }
 
 #tables-data img {
@@ -702,7 +740,8 @@ div {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    margin-top: 40%;
+    margin-top: 20%;
+    margin-left: 250%;
 }
 
 #backBtnimg {
@@ -1239,13 +1278,6 @@ div {
     border: 1px solid rgba(128, 128, 128, 0.452);
     padding: 5%;
 }
-
-#title-content {
-    display: flex;
-    margin-right: 10%;
-    justify-content: space-between;
-}
-
 
 #back-container {
     opacity: 80%;

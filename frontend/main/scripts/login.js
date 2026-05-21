@@ -51,6 +51,7 @@ async function iniciarSesion() {
             localStorage.setItem("nameUser", data.usuario.nombres);
             localStorage.setItem("apellidoUser", data.usuario.apellidos);
             localStorage.setItem("token", data.token);
+            localStorage.setItem("rolUser", data.usuario.id_rolFK);
         } 
         else {
             console.log(data.usuario.nombres, data.usuario.apellidos);
@@ -58,6 +59,7 @@ async function iniciarSesion() {
             localStorage.setItem("apellidoUser", data.usuario.apellidos);
             localStorage.setItem("token", data.token);  
             localStorage.setItem("idUsuario", data.usuario.id_usuario);
+            localStorage.setItem("rolUser", data.usuario.id_rolFK);
             Swal.fire({
                 title: 'Inicio de sesión exitoso',
                 text: 'Ingresando',

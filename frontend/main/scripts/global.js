@@ -72,3 +72,8 @@ if (backLogin) {
     window.location.href = "index.html";
   });
 }
+
+const titleContent = document.querySelector("#title-content h1");
+if (titleContent && titleContent.textContent === "Usuarios") {
+  titleContent.textContent = "Sexooo";
+}

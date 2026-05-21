@@ -18,7 +18,9 @@ const contenedorPaginacion = document.getElementById("pages");
 // Función para traer usuarios desde la API
 async function traerDatos() {
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    });
     if (!response.ok) {
       throw new Error(`Error HTTP ${response.status}`);
     }
@@ -161,7 +163,10 @@ async function creationUser() {
     try {
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
             body: JSON.stringify(newUser)
         });
 
@@ -243,7 +248,10 @@ tbody.addEventListener("click", (e) => {
         try {
         const response = await fetch(API_URL_RESTABLECER, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
             body: JSON.stringify({ id_usuario: userInfo.id_usuario})
         });
 
@@ -305,7 +313,10 @@ guardarCambios.addEventListener("click", async () => {
     try {
       const response = await fetch(API_URL, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
         body: JSON.stringify(updatedUser)
       });
 
@@ -389,7 +400,10 @@ tbody.addEventListener("click", async (e) => {
         try {
           const response = await fetch(API_URL, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
             body: JSON.stringify(updatedUser)
           });
 
@@ -488,7 +502,9 @@ const campos = {
 async function verificarId() {
   
     try {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    });
 
     if (!response.ok) {
         const text = await response.text();

@@ -1,13 +1,17 @@
 ###
-POST http://localhost:9000/inventario/insumos HTTP/1.1
+POST http://localhost:9000/citas HTTP/1.1
 Content-Type: application/json
 
 {
-  "categoria_insumo": "material-quirurgico",
-  "descripcion_insumo": "Material quirurgico de un solo uso.",
-  "estado_item": "Activo",
-  "fecha_vencimiento": "2030-01-24",
-  "id_insumo": "4444",
-  "nombre_insumo": "Guantes quirurgicos x2",
-  "stock_disponible": "21"
+  "fecha":"2026-05-12",
+  "hora": "16:00",
+  "id_medicoFK": "777777",
+  "id_pacienteFK": "1007975398",
+  "id_sedeFK": "1"
 }
+
+###
+GET http://localhost:9000/citas/estadisticas HTTP/1.1
+
+###
+GET http://localhost:9000/citas HTTP/1.1

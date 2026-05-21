@@ -1,8 +1,11 @@
 const express = require('express');
 const routes = express.Router();
+const { verificarToken, verificarRol } = require('../middleware/authMiddleware');
+
+routes.use(verificarToken, verificarRol([1, 3]));
 
 //Ruta para conseguir datos de usuario de BD
-routes.get('/sedes', (req, res) => {
+routes.get('/sedes', verificarToken, verificarRol([1, 3]), (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
         conn.query('SELECT * FROM sedes', (err, rows) => {
@@ -13,7 +16,7 @@ routes.get('/sedes', (req, res) => {
 });
 
 // Registro de citas
-routes.post('/', (req, res) => {
+routes.post('/', verificarToken, verificarRol([1, 3]), (req, res) => {
   const { id_sedeFK, id_medicoFK, id_pacienteFK, fecha, hora } = req.body;
 
   req.getConnection((err, conn) => {
@@ -52,7 +55,7 @@ routes.post('/', (req, res) => {
 });
 
 // Ruta para actualizar estado de citas a No asistida
-routes.put('/sin-asistencia', (req, res) => {
+routes.put('/sin-asistencia', verificarToken, verificarRol([1, 3]), (req, res) => {
   const { id_cita } = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.status(500).json(err);
@@ -67,7 +70,7 @@ routes.put('/sin-asistencia', (req, res) => {
 });
 
 // Ruta para cancelar cita
-routes.put("/cancelar", (req, res) => {
+routes.put("/cancelar", verificarToken, verificarRol([1, 3]), (req, res) => {
   const { id_cita } = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.status(500).json(err);
@@ -86,7 +89,7 @@ routes.put("/cancelar", (req, res) => {
 });
 
 // Ruta para confirmar cita
-routes.put("/confirmar", (req, res) => {
+routes.put("/confirmar", verificarToken, verificarRol([1, 3]), (req, res) => {
   const { id_cita } = req.body;
   req.getConnection((err, conn) => {
     if (err) return res.status(500).json(err);
@@ -98,14 +101,43 @@ routes.put("/confirmar", (req, res) => {
         if (result.affectedRows === 0) {
           return res.status(404).json({ message: "Cita no encontrada" });
         }
-        res.json({ message: "Cita cancelada correctamente" });
+        res.json({ message: "Cita confirmada correctamente" });
       },
     );
   });
 });
 
+// Estadísticas: citas por mes (últimos 12 meses)
+routes.get("/estadisticas", verificarToken, verificarRol([1, 3]), (req, res) => {
+  req.getConnection((err, conn) => {
+    if (err) return res.status(500).json({ message: "Error de conexión" });
+    conn.query(`
+            SELECT 
+                MONTH(fecha) AS mes,
+                COUNT(*) AS cantidad
+            FROM citas
+            WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+            GROUP BY mes
+            ORDER BY mes
+        `, (err, rows) => {
+      if (err) return res.status(500).json({ message: "Error en consulta" });
+      
+      // Mapear a meses y cantidades
+      const mesesNombres = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      const meses = [];
+      const cantidades = [];
+      for (let i = 1; i <= 12; i++) {
+        const row = rows.find(r => r.mes === i);
+        meses.push(mesesNombres[i-1]);
+        cantidades.push(row ? row.cantidad : 0);
+      }
+      res.json({ meses, cantidades });
+    });
+  });
+});
+
 // Ruta INNER JOIN para segun consultar datos de cita en conjunto con nombre y apellido de paciente segun su id
-routes.get('/', (req, res) => {
+routes.get('/', verificarToken, verificarRol([1, 3]), (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
         conn.query('SELECT citas.id_cita, citas.codigo_cita, citas.fecha, citas.hora, citas.estado_cita, sedes.id_sede, sedes.nombre_sede, sedes.direccion, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido, usuarios_medicos.nombres AS medico_nombre, usuarios_medicos.apellidos AS medico_apellidos FROM citas INNER JOIN usuarios AS usuarios_paciente ON citas.id_pacienteFK = usuarios_paciente.id_usuario INNER JOIN usuarios AS usuarios_medicos ON citas.id_medicoFK = usuarios_medicos.id_usuario INNER JOIN sedes ON citas.id_sedeFK = sedes.id_sede ORDER BY codigo_cita ASC', (err, rows) => {

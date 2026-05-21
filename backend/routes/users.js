@@ -8,8 +8,8 @@ const { login, cambiarClave, restablecerClave } = require('../controllers/authCo
 //Importar middlewares
 const { verificarToken, verificarRol } = require('../middleware/authMiddleware');
 
-//Ruta para conseguir datos de usuario de BD
-routes.get('/', (req, res) => {
+//Ruta para conseguir datos de usuario de BD (solo Administrativo)
+routes.get('/', verificarToken, verificarRol([1]), (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
         conn.query('SELECT * FROM usuarios ORDER BY id_usuario', (err, rows) => {
@@ -19,8 +19,8 @@ routes.get('/', (req, res) => {
     });
 });
 
-//Ruta para crear usuarios
-routes.post('/', async (req, res) => {
+//Ruta para crear usuarios (solo Administrativo)
+routes.post('/', verificarToken, verificarRol([1]), async (req, res) => {
     req.getConnection(async (err, conn) => {
         if (err) return res.send(err);
 
@@ -36,8 +36,8 @@ routes.post('/', async (req, res) => {
     });
 });
 
-//Ruta para actualizar datos de usuario en BD
-routes.put('/', (req, res) => {
+//Ruta para actualizar datos de usuario en BD (solo Administrativo)
+routes.put('/', verificarToken, verificarRol([1]), (req, res) => {
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
 
