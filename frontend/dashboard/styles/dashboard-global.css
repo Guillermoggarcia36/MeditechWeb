@@ -206,15 +206,14 @@ div {
 
 #sidebar-container {
     background-color: #498EC9;
-    min-height: calc(95vh - 80px);
     align-self: stretch;
     border-radius: 0px 0px 0px 12px;
     grid-area: sidebar;
+    min-height: calc(95vh - 80px);
 }
 
 #sidebar-container button {
     color: white;
-    background-color: rgba(255, 255, 255, 0);
     margin-top: 4%;
     padding: 1%;
     border: none;
@@ -232,7 +231,9 @@ div {
         "img text";
     cursor: pointer;
     width: 100%;
+    background-color: #498EC9;
 }
+
 
 #usuarios-btn img, #inicio-btn img, #citas-btn img, #historial-btn img, #inventario-btn img, #autorizaciones-btn img {
     width: 36px;
@@ -363,19 +364,22 @@ div {
 }
 
 #tables {
+    justify-content: center;
+    align-items: center;
+    width: 98%;
+    font-family: 'Segoe UI', sans-serif;
+    border-bottom: none;
+    border-right: none;
+    border-spacing: 8px 15px;
+    border-radius: 10px;
+    text-align: center;
     margin-bottom: 1%;
     margin-left: 1%;
     margin-right: 1%;
-    width: calc(100% - 2%);
-    table-layout: fixed;
-    font-family: 'Segoe UI', sans-serif;
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.094);
+    border-radius: 10px 10px 10px 10px;
     border-spacing: 0;
-    background-color: white;
-    border-spacing: 0px 10px; /* horizontal | vertical */
-    max-height: 60vh;
-    min-height: 50vh;
+    border-spacing: 0px 0px; /* horizontal | vertical */
+    border: 1px solid rgba(0, 0, 0, 0.094);
 }
 
 #tables thead {
@@ -388,6 +392,8 @@ div {
     white-space: nowrap;
     padding: 0 8px;
     animation: fadeIn 0.5s ease;
+    height: 5vh;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.171);
 }
 
 
@@ -413,19 +419,17 @@ div {
 }
 
 #adduser-container {
-    display: none;
+    display: flex;
     grid-template-areas: 
         "title title"
         "form form"
         "buttons buttons";
-    margin-left: 30%;
-    margin-right: 45%;
     font-family: 'Roboto', sans-serif;
     background-color: white;
     border-radius: 5px;
     position: fixed;
     top: 5vh;
-    width: 30%;
+    width: 35%;
     height: 85%;
     overflow-y: scroll;
     animation: fadeIn 0.65s;
@@ -560,7 +564,7 @@ div {
     position: fixed;
     top: 0;
     left: 0;
-    width: 120%;
+    width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
@@ -655,8 +659,10 @@ div {
 
 #select-menu {
     display: flex;
-    width: 50%;
+    width: calc(100% - 10%);
     flex-direction: column;
+    align-items: center;
+    align-self: center;
 }
 
 #select-menu button {
@@ -669,7 +675,6 @@ div {
     margin-right: 5%;
     border-radius: 8px;
     cursor: pointer;
-
     display: flex;
     align-items: center;   /* centra vertical */
     justify-content: center; /* mantiene icono+texto centrados */
@@ -791,7 +796,7 @@ div {
     color: white;
     background-color: #498EC9;
     display: flex;
-    gap: 10px;
+    gap: 5px;
     justify-content: center;  /* centra horizontalmente */
     align-items: center;             /* centra verticalmente */    
     opacity: 40%;
@@ -800,6 +805,7 @@ div {
 }
 
 #next-btn img {
+    display: flex;
     width: 22px;
 }
 
@@ -864,7 +870,7 @@ div {
 #resumen-cita {
     font-family: 'Roboto', sans-serif;
     font-size: 1.5rem;
-    margin: 5%;
+    margin: 2%;
     display: flex;
     justify-content: center;
     text-align: center;
@@ -941,6 +947,8 @@ div {
 #tables-columns-citas td {
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: 10px;
 }
 
@@ -950,6 +958,7 @@ div {
 
 .cancelCita-btn img {
     width: 32px;
+    height: 32px;
 }
 
 #back-btn {
@@ -1957,6 +1966,17 @@ div {
     margin-left: 5%;
 }
 
+.btn-dot {
+    position: absolute;
+    top: 27px;
+    right: 30px;
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    border: 2px solid #498EC9;
+}
+
 /* ==================== RESPONSIVE ==================== */
 
 /* Tablet (768px - 1024px) */
@@ -2131,7 +2151,7 @@ div {
     /* Sidebar horizontal en móvil */
     #sidebar-container {
         display: flex;
-        flex-direction: row;
+        flex-direction:column;
         padding-bottom: 0;
         padding: 4px 0;
         border-radius: 0;
@@ -2285,6 +2305,7 @@ div {
         text-overflow: unset;
         font-size: 0.85rem;
         width: 100%;
+        height: auto;
         box-sizing: border-box;
     }
 

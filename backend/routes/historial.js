@@ -8,7 +8,7 @@ routes.get('/', verificarToken, verificarRol([1, 2]), (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
         conn.query(
-          "SELECT historial_clinico.id_historial, historial_clinico.codigo_historial, historial_clinico.id_pacienteFK, historial_clinico.fecha_registro, historial_clinico.fecha_nacimiento, historial_clinico.sexo, historial_clinico.grupo_sanguineo, historial_clinico.antecedentes_familiares, historial_clinico.antecedentes_personales, historial_clinico.procedimientos_quirurgicos, historial_clinico.estado_clinico, historial_clinico.descripcion_general, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido FROM historial_clinico INNER JOIN usuarios AS usuarios_paciente ON historial_clinico.id_pacienteFK = usuarios_paciente.id_usuario;",
+          "SELECT historial_clinico.id_historial, historial_clinico.codigo_historial, historial_clinico.id_pacienteFK, historial_clinico.fecha_registro, historial_clinico.fecha_nacimiento, historial_clinico.sexo, historial_clinico.grupo_sanguineo, historial_clinico.antecedentes_familiares, historial_clinico.antecedentes_personales, historial_clinico.procedimientos_quirurgicos, historial_clinico.estado_clinico, historial_clinico.descripcion_general, usuarios_paciente.nombres AS paciente_nombre, usuarios_paciente.apellidos AS paciente_apellido FROM historial_clinico INNER JOIN usuarios AS usuarios_paciente ON historial_clinico.id_pacienteFK = usuarios_paciente.id_usuario ORDER BY id_historial;",
           (err, rows) => {
             if (err) return res.send(err);
             res.json(rows);

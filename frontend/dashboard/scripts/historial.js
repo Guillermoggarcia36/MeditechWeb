@@ -6,7 +6,6 @@ API_PROCEDIMIENTOS = "http://localhost:9000/historial/procedimientos";
 API_MEDICAMENTOS = "http://localhost:9000/inventario/medicamentos";
 API_AUTORIZACIONES = "http://localhost:9000/autorizaciones";
 
-
 const overlay = document.getElementById("overlay");
 const addHistorialContainer = document.getElementById("addhistorial-container");
 const addConsultaContainer = document.getElementById("addconsulta-container");
